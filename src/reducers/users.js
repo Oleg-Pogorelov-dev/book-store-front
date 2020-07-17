@@ -1,27 +1,22 @@
-import { ADD_USER } from '../actions/actions'
+import { REQUESTED_MY_PROFILE, REQUESTED_MY_PROFILE_SUCCEEDED } from "../actions/actions";
 
-const initialState = [{ 
-    id: 0,
-    email: '',
-    password: '',
-    passwrod_confirmation: '',
-    first_name: '',
-    last_name: ''
-  }]
-
-export function userReducer(state = initialState, action) {
-  switch (action.type) {
-    case ADD_USER:
-      return [ ...state,{
-        id: state[state.length -1].id + 1,
-        email: action.payload_1,
-        password: action.payload_2,
-        passwrod_confirmation: action.payload_3,
-        first_name: action.payload_4,
-        last_name: action.payload_5
-      }]
-
-    default:
-      return state
-  }
-}
+export function reducerMyProfile(state = {
+  email: '',
+  loading: false
+}, action) {
+    switch (action.type) {
+      case REQUESTED_MY_PROFILE:
+          return {
+            email: '',
+            loading: true
+          }
+      case REQUESTED_MY_PROFILE_SUCCEEDED:
+        return {
+          email: action.data.user.name,
+          loading: false
+        }
+      default:
+        return state;
+    }
+};
+  
