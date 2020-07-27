@@ -1,41 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import Login from './components/Login/Login';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import Registration from './components/Registration/Registration';
 import MainPage from './components/MainPage/MainPage';
 import Profile from './components/Profile/Profile';
-import { Redirect } from 'react-router-dom'
 import Header from './components/Header/Header';
+import { connect } from 'react-redux';
 
-const ProtectedRoute = (props) => {
-  const Component = props.component;
-  const isAuthenticated = localStorage.getItem('token');
-  
-  return <Route path={props.path} render={ () => {
-      if (isAuthenticated) {
-        return <Component />
-      } else {
-        return <Redirect to={{ pathname: '/login' }} />
-      }
-      
-    }} />
-}
+import { getMyProfile } from './actions/actionCreators';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
-function App() {
+function App(props) {
+  console.log('ada', props)
+  useEffect(() => {
+    if (localStorage.token && !props.user.email) {
+      props.getMyProfile();
+    }
+  },[]);
+
   return (
     <BrowserRouter>
       <div className="App">
-        <Header />     
+        <Header load={props.user.loading} user={props.user.email} />     
         <Switch>
-          <ProtectedRoute component={Profile} path='/profile' />
-          <Route path='/login' render={ () => <Login />} />
-          <Route path='/registration' render={ () => <Registration />} />
+          <ProtectedRoute user={props.user.email} load={props.user.loading} component={Profile} path='/profile' />
+          <Route path='/login' render={ () => <Login user={props.user.email}/>} />
+          <Route path='/registration' render={ () => <Registration user={props.user.email}/>} />
           <Route path='/' render={ () => <MainPage />} />
         </Switch>
       </div>
-    </BrowserRouter>
+    </BrowserRouter> 
   );
 }
 
-export default App;
+const mapStateToProps = store => {
+  return {user: store.user}
+}
+
+const mapDispatchToProps = {
+  getMyProfile,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

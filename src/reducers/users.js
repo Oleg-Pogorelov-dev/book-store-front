@@ -12,7 +12,7 @@ export function reducerMyProfile(state = {
           }
       case REQUESTED_MY_PROFILE_SUCCEEDED:
         return {
-          email: action.data.user.name,
+          email: action.data.user.email,
           loading: false
         }
       default:

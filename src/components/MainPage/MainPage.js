@@ -1,6 +1,7 @@
 import React from 'react';
 
-function MainPage() {
+
+function MainPage(props) {
 
   return (
 		<div>
@@ -8,5 +9,5 @@ function MainPage() {
 		</div>
   );
 }
-
+  
 export default MainPage;

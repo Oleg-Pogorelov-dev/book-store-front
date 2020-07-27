@@ -5,7 +5,7 @@ export const fetchAuth = (url, email, password, setMessage, setRedirect) => {
     url: url,
     method: 'POST',
     data: {
-      login: email,
+      email: email,
       password: password
     },
     headers: {
@@ -15,6 +15,7 @@ export const fetchAuth = (url, email, password, setMessage, setRedirect) => {
   .then(response => { 
     localStorage.setItem('token', response.data.token)
     setRedirect(true);
+    window.location.reload()
   })
   .catch(err => setMessage(err.response.data.message))
 }

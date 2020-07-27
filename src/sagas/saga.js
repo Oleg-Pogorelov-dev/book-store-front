@@ -3,6 +3,7 @@ import axios from "axios";
 import { requestMyProfile, requestMyProfileSuccess} from '../actions/actionCreators';
 
 function* fetchMyProfileAsync() {
+  console.log('1211')
   yield put(requestMyProfile())
   const data = yield call(() => {
     return axios({

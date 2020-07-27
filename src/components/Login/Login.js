@@ -1,9 +1,11 @@
 import React from 'react';
 import { fetchAuth } from '../../fetches/fetches';
 import { Redirect } from 'react-router-dom';
+import { TextField, Button } from '@material-ui/core';
+import classes from './Login.module.css';
 
 
-function Login() {
+function Login(props) {
 	const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [message, setMessage] = React.useState('');
@@ -15,34 +17,37 @@ function Login() {
 	}
 	
   const onBtnClick = (e) => { 
-		e.preventDefault();
+    e.preventDefault();
     fetchAuth('http://localhost:3000/login', email, password, setMessage, setRedirect);
   }
-  console.log('fasfas', message)
-  if (redirect) {
+
+  if (redirect || props.user) {
     return <Redirect to="/" />
   } else {
     return (
       <div>
         <h1>Login</h1>
-          <form>
-            <div>
-              <label>Email</label>
-              <input 
-                name='email' 
-                onChange={onInputChange}
-              /><br/>
-              <label>Password</label>
-              <input
-                name='password'
-                type="password"
-                onChange={onInputChange}
-              /><br/>
-              <button onClick={onBtnClick}>
-                Sign up
-              </button>
-            </div>
-          </form>
+        <label className={classes.error} hidden={!message}>{message}</label><br/>
+        <TextField 
+            name='email'
+            className={classes.input} 
+            required 
+            id="standard-required" 
+            label="Email"
+            onChange={onInputChange}
+          /><br/>
+          <TextField
+            name='password'
+            className={classes.input}
+            id="standard-password-input"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            onChange={onInputChange}
+          /><br/>
+          <Button onClick={onBtnClick} variant="contained" color="primary">
+            Sign in
+          </Button>
       </div>
     );
   }

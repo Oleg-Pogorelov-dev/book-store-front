@@ -1,52 +1,52 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { getMyProfile } from '../../actions/actionCreators';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import AppBar from '@material-ui/core/AppBar';
+import { Button, Typography, Toolbar } from '@material-ui/core';
+import classes from './Header.module.css';
+
 
 function Header(props) {
-  const [redirect, setRedirect] = React.useState(false);
-
-  useEffect(() => {
-    if (localStorage.token) {
-      props.getMyProfile()
-    }
-  },[]);
 
 	const logOut = (e) => {
     e.preventDefault();
     localStorage.setItem('token', '');
-    setRedirect(true);
+    window.location.reload()
   }
 
-  console.log('user', props)
-
-  if (redirect) {
-    return <Redirect to="/login" />
-  } else {
-    return (
-      <div>
-        <h1>Welcome!</h1>
-        {
-          props.user ? 
-          <div>
-            <Link to={{ pathname: '/profile' }}>{props.user}</Link>
-            <button onClick={logOut}>Выйти</button> 
-          </div> : ''
-        }
-      </div>
-    );
-  }
+  return (
+    <div className={classes.header}>
+      { props.load ?
+        <div></div> 
+        :
+        <AppBar position="fixed">
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              <Link to='/' className={classes.link} >
+                  Main page
+              </Link>
+            </Typography>
+            {
+              !props.user ?
+                <div className={classes.tabs_log}>
+                    <Link to='/registration' className={classes.link} >
+                      <Button color="inherit">Sign up</Button>  
+                    </Link>  
+                    <Link to='/login' className={classes.link} >         
+                      <Button color="inherit">Sign in</Button>
+                    </Link> 
+                </div>
+              : <div className={classes.tabs_log}>        
+                  <Button color="inherit" onClick={logOut}>Log Out</Button>
+                  <Link to='/profile' className={classes.link} >
+                      <Button color="inherit">{props.user}</Button>
+                  </Link>
+                </div>
+            }
+          </Toolbar>
+        </AppBar>
+      }
+    </div>
+  );
 }
 
-const mapStateToProps = store => {
-    return {user: store.user.email}
-  }
-  
-  const mapDispatchToProps = {
-    getMyProfile,
-  }
-  
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Header));
+export default Header;
