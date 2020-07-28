@@ -12,7 +12,7 @@ import { getMyProfile } from './actions/actionCreators';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 function App(props) {
-  console.log('ada', props)
+  console.log(props)
   useEffect(() => {
     if (localStorage.token && !props.user.email) {
       props.getMyProfile();
