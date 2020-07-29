@@ -1,8 +1,9 @@
 import React from 'react';
-import { fetchAuth } from '../../fetches/fetches';
 import { Redirect } from 'react-router-dom';
 import { TextField, Button } from '@material-ui/core';
 import classes from './Login.module.css';
+import { connect } from 'react-redux';
+import { postAuth } from '../../actions/actionCreators';
 
 
 function Login(props) {
@@ -18,7 +19,13 @@ function Login(props) {
 	
   const onBtnClick = (e) => { 
     e.preventDefault();
-    fetchAuth('http://localhost:3000/login', email, password, setMessage, setRedirect);
+    props.postAuth({
+      url: 'http://localhost:3000/login',
+      email,
+      password,
+      setMessage
+    })
+    setRedirect(true);
   }
 
   if (redirect || props.user) {
@@ -53,4 +60,12 @@ function Login(props) {
   }
 }
 
-export default Login;
+const mapDispatchToProps = {
+  postAuth
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Login);
+

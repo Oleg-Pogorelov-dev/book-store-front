@@ -10,9 +10,9 @@ import { connect } from 'react-redux';
 
 import { getMyProfile } from './actions/actionCreators';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import AddBook from './components/AddBook/AddBook';
 
 function App(props) {
-  console.log(props)
   useEffect(() => {
     if (localStorage.token && !props.user.email) {
       props.getMyProfile();
@@ -25,9 +25,10 @@ function App(props) {
         <Header load={props.user.loading} user={props.user.email} />     
         <Switch>
           <ProtectedRoute user={props.user.email} load={props.user.loading} component={Profile} path='/profile' />
+          <Route path='/add_book' render={ () => <AddBook />} />
           <Route path='/login' render={ () => <Login user={props.user.email}/>} />
           <Route path='/registration' render={ () => <Registration user={props.user.email}/>} />
-          <Route path='/' render={ () => <MainPage />} />
+          <Route path='/' render={ () => <MainPage user={props.user.email} />} />
         </Switch>
       </div>
     </BrowserRouter> 

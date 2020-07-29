@@ -1,8 +1,9 @@
 import React from 'react';
-import { fetchAuth } from '../../fetches/fetches';
 import { Redirect } from 'react-router-dom';
 import { TextField, Button } from '@material-ui/core';
 import classes from './Registration.module.css';
+import { postAuth } from '../../actions/actionCreators';
+import { connect } from 'react-redux';
 
 
 function Registration(props) {
@@ -26,7 +27,13 @@ function Registration(props) {
       setMessage('Неверный email.')
     } else {
       e.preventDefault();
-      fetchAuth('http://localhost:3000/registration', email, password, setMessage, setRedirect);
+      props.postAuth({
+        url: 'http://localhost:3000/registration',
+        email,
+        password,
+        setMessage
+      })
+      setRedirect(true);
     }
   }
 
@@ -71,4 +78,11 @@ function Registration(props) {
   }
 }
 
-export default Registration;
+const mapDispatchToProps = {
+  postAuth
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Registration);

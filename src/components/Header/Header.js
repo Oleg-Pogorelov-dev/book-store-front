@@ -22,7 +22,7 @@ function Header(props) {
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
               <Link to='/' className={classes.link} >
-                  Main page
+                  Book store
               </Link>
             </Typography>
             {
