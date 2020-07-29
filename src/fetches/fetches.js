@@ -14,6 +14,7 @@ export const fetchAuth = (url, email, password, setMessage, setRedirect) => {
   })
   .then(response => { 
     localStorage.setItem('token', response.data.token)
+    localStorage.setItem('refresh-token', response.data.refresh_token)
     setRedirect(true);
     window.location.reload()
   })
