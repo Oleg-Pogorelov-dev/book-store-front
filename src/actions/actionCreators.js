@@ -5,7 +5,8 @@ import {
   FETCHED_BOOKS, 
   REQUESTED_BOOKS, 
   REQUESTED_BOOKS_SUCCEEDED,
-  FETCHED_AUTH
+  FETCHED_AUTH,
+  FETCHED_ADD_BOOK
 } from "./actions"
 
 export const postAuth = (data) => {
@@ -34,4 +35,8 @@ export const requestBooks = () => {
 
 export const requestBooksSuccess = (data) => {
   return { type: REQUESTED_BOOKS_SUCCEEDED, data }
+}
+
+export const addBook = (data) => {
+  return { type: FETCHED_ADD_BOOK, data }
 }

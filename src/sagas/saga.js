@@ -74,10 +74,28 @@ function* fetchAuthAsync(data) {
   yield fetchBooksAsync();
 }
 
+function* fetchAddBookAsync(data) {
+  yield call(() => {
+    return axios({
+      url: 'http://localhost:3000/books/add_book',
+      method: 'POST',
+      data: data.data.formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      data.data.setMessage(response.data.message)
+    })
+    .catch(err => data.data.setMessage(err.response))
+  })
+  yield fetchBooksAsync();
+}
 
 // Sagas
 export function* watchFetch() {
   yield takeEvery('FETCHED_AUTH', fetchAuthAsync)
   yield takeEvery('FETCHED_MY_PROFILE', fetchMyProfileAsync)
   yield takeEvery('FETCHED_BOOKS', fetchBooksAsync)
+  yield takeEvery('FETCHED_ADD_BOOK', fetchAddBookAsync)
 }

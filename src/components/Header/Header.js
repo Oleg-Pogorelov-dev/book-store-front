@@ -21,7 +21,7 @@ function Header(props) {
         <AppBar position="fixed">
           <Toolbar>
             <Typography variant="h6" className={classes.title}>
-              <Link to='/' className={classes.link} >
+              <Link to='/1' className={classes.link} >
                   Book store
               </Link>
             </Typography>

@@ -1,3 +1,10 @@
+.mainPage {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .book_list {
     margin: 0 auto;
     max-width: 500px;
@@ -14,6 +21,52 @@
     border-radius: 5px;
 }
 
-.MuiPagination-ul {
+.book_cover {
+  width: 50px;
+  height: 100px;
+}
+
+.pagination_and_button {
     margin: 0 auto;
 }
+
+.customLink {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  background-color: white;
+  color: rgba(6, 6, 126, 0.76);
+  border: 1px solid rgba(7, 7, 245, 0.514);
+  border-radius: 5px;
+}
+
+.paper {
+    margin: 0 auto;
+    margin-top: 20vh;
+    max-width: 40vw;
+    background-color: white;
+    position: 'absolute';
+}
+
+.pagination {
+  display: flex;
+  margin-top: 20px;
+}
+  
+.pagination_item {
+  border: 1px solid blue;
+  border-radius: 5px;
+  margin: 5px;
+  color: blue;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.active_item {
+  background-color: blue;
+  color: white;
+}
+
+.pagination_item:hover:not(.active_item) {background-color: #ddd;}
