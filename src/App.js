@@ -1,21 +1,23 @@
 import React, { useEffect } from "react";
-import "./App.css";
-import Login from "./components/Login/Login";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import "./App.css";
+
+import Login from "./components/Login/Login";
 import Registration from "./components/Registration/Registration";
 import MainPage from "./components/MainPage/MainPage";
 import Profile from "./components/Profile/Profile";
 import Header from "./components/Header/Header";
-import { connect } from "react-redux";
-
-import { getMyProfile } from "./actions/actionCreators";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
+import { getMyProfile } from "./actions/actionCreators";
+
 function App(props) {
+  console.log(props);
   useEffect(() => {
-    // if (localStorage.token) {
-    // props.getMyProfile();
-    // }
+    if (localStorage.token && !props.user.email) {
+      props.getMyProfile();
+    }
   }, []);
 
   return (
@@ -29,17 +31,27 @@ function App(props) {
             component={Profile}
             path="/profile"
           />
-          <Route
+          <ProtectedRoute
+            user={props.user.email}
+            load={props.user.loading}
+            store={props}
+            component={Login}
             path="/login"
-            render={() => <Login user={props.user.email} />}
           />
-          <Route
+          {/* <Route path="/login" render={() => <Login />} />
+          <Route path="/registration" render={() => <Registration />} /> */}
+          <ProtectedRoute
+            user={props.user.email}
+            load={props.user.loading}
+            component={Registration}
             path="/registration"
-            render={() => <Registration user={props.user.email} />}
           />
-          <Route
-            path="/:page"
-            render={() => <MainPage page={props} user={props.user.email} />}
+          <ProtectedRoute
+            user={props.user.email}
+            load={props.user.loading}
+            store={props}
+            component={MainPage}
+            path="/books/:page"
           />
         </Switch>
       </div>

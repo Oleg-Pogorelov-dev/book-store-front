@@ -29,9 +29,6 @@ function Login(props) {
     setRedirect(true);
   };
 
-  // if (redirect || props.user) {
-  //   return <Redirect to="/" />
-  // } else {
   return (
     <div>
       <h1>Login</h1>
@@ -64,7 +61,6 @@ function Login(props) {
     </div>
   );
 }
-// }
 
 const mapDispatchToProps = {
   postAuth,

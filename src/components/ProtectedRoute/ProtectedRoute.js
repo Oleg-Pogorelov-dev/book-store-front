@@ -8,15 +8,26 @@ const ProtectedRoute = (props) => {
   if (props.load) {
     return <div>Load</div>;
   }
+
+  if (
+    isAuthenticated &&
+    (props.path === "/login" || props.path === "/registration")
+  ) {
+    return <Redirect to="/books/1" />;
+  }
+
+  if (
+    !isAuthenticated &&
+    !(props.path === "/login" || props.path === "/registration")
+  ) {
+    return <Redirect to="/login" />;
+  }
+
   return (
     <Route
       path={props.path}
       render={() => {
-        // if (isAuthenticated) {
-        return <Component user={props.user} />;
-        // } else {
-        //   return <Redirect to={{ pathname: '/login' }} />
-        // }
+        return <Component page={props.store} user={props.user} />;
       }}
     />
   );

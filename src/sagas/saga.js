@@ -33,13 +33,16 @@ function* fetchMyProfileAsync() {
   yield put(requestMyProfileSuccess(data));
 }
 
-function* fetchBooksAsync() {
+function* fetchBooksAsync(offset) {
   yield put(requestBooks());
   const data = yield call(() => {
     return axios({
       url: "http://localhost:3000/books",
       method: "GET",
       responseType: "json",
+      params: {
+        offset: offset.data,
+      },
       headers: {
         "Content-Type": "application/json",
         "Access-Token": localStorage.getItem("token"),
