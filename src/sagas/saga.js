@@ -5,6 +5,8 @@ import {
   requestMyProfileSuccess,
   requestBooksSuccess,
   requestBooks,
+  requestBook,
+  requestBookSuccess,
 } from "../actions/actionCreators";
 
 function* fetchMyProfileAsync() {
@@ -33,7 +35,7 @@ function* fetchMyProfileAsync() {
   yield put(requestMyProfileSuccess(data));
 }
 
-function* fetchBooksAsync(offset) {
+function* fetchBooksAsync(options) {
   yield put(requestBooks());
   const data = yield call(() => {
     return axios({
@@ -41,7 +43,8 @@ function* fetchBooksAsync(offset) {
       method: "GET",
       responseType: "json",
       params: {
-        offset: offset.data,
+        offset: options.data.offset,
+        genre: options.data.genre,
       },
       headers: {
         "Content-Type": "application/json",
@@ -64,6 +67,32 @@ function* fetchBooksAsync(offset) {
       });
   });
   yield put(requestBooksSuccess(data));
+}
+
+function* fetchBookAsync(id) {
+  yield put(requestBook());
+  const data = yield call(() => {
+    return axios({
+      url: "http://localhost:3000/books/book",
+      method: "GET",
+      responseType: "json",
+      params: {
+        id: id.data,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Token": localStorage.getItem("token"),
+        "Refresh-Token": localStorage.getItem("refresh-token"),
+      },
+    })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((err) => {
+        return console.log(err);
+      });
+  });
+  yield put(requestBookSuccess(data));
 }
 
 function* fetchAuthAsync(data) {
@@ -131,5 +160,6 @@ export function* watchFetch() {
   yield takeEvery("FETCHED_AUTH", fetchAuthAsync);
   yield takeEvery("FETCHED_MY_PROFILE", fetchMyProfileAsync);
   yield takeEvery("FETCHED_BOOKS", fetchBooksAsync);
+  yield takeEvery("FETCHED_BOOK", fetchBookAsync);
   yield takeEvery("FETCHED_ADD_BOOK", fetchAddBookAsync);
 }

@@ -1,0 +1,18 @@
+.drawer {
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  border: 2px solid blue;
+  background-color: rgba(124, 124, 124, 0.103);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  height: 80vh;
+  width: 20vw;
+}
+
+.genre {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}

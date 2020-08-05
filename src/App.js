@@ -11,6 +11,7 @@ import Header from "./components/Header/Header";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import { getMyProfile } from "./actions/actionCreators";
+import Book from "./components/Book/Book";
 
 function App(props) {
   console.log(props);
@@ -53,6 +54,7 @@ function App(props) {
             component={MainPage}
             path="/books/:page"
           />
+          <Route path="/:book" render={() => <Book />} />
         </Switch>
       </div>
     </BrowserRouter>
