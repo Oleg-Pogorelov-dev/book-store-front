@@ -13,7 +13,7 @@ const ProtectedRoute = (props) => {
     isAuthenticated &&
     (props.path === "/login" || props.path === "/registration")
   ) {
-    return <Redirect to="/books/1" />;
+    return <Redirect to="/books" />;
   }
 
   if (

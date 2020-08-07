@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import classes from "./SideBar.module.css";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import Search from "../Search/Search";
@@ -20,14 +20,11 @@ function SideBar(props) {
     setGenresSelected(genres);
   };
 
-  console.log("genresSelected", genresSelected);
-  console.log("checkboxes", checkboxes);
+  useMemo(() => checkGenres(), [checkboxes]);
 
   useEffect(() => {
-    if (genresSelected.length) {
-      props.getBooks({ offset: props.offset, genre: genresSelected });
-    }
-  }, [genresSelected]);
+    props.getBooks({ offset: props.offset, genre: genresSelected });
+  }, [props.offset, genresSelected]);
 
   const handleChange = (event) => {
     setCheckboxes({ ...checkboxes, [event.target.name]: event.target.checked });
@@ -35,7 +32,7 @@ function SideBar(props) {
 
   return (
     <div className={classes.drawer}>
-      <Search />
+      <Search books={props.books} getBooks={props.getBooks} />
       <div className={classes.genre}>
         <div>Жанры</div>
         <FormControlLabel

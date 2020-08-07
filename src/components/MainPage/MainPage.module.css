@@ -1,24 +1,24 @@
 .mainPage {
-    height: 80vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .book_list {
-    margin: 0 auto;
-    max-width: 500px;
-    display: flex;
-    flex-wrap: wrap;
+  margin: 0 auto;
+  max-width: 500px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .book {
-    margin-right: 10px;
-    margin-bottom: 10px;
-    height: 150px;
-    width: 100px;
-    border: 2px solid blue;
-    border-radius: 5px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  height: 150px;
+  width: 100px;
+  border: 2px solid blue;
+  border-radius: 5px;
 }
 
 .book_cover {
@@ -27,7 +27,7 @@
 }
 
 .pagination_and_button {
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 .customLink {
@@ -39,21 +39,22 @@
   color: rgba(6, 6, 126, 0.76);
   border: 1px solid rgba(7, 7, 245, 0.514);
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .paper {
-    margin: 0 auto;
-    margin-top: 20vh;
-    max-width: 40vw;
-    background-color: white;
-    position: 'absolute';
+  margin: 0 auto;
+  margin-top: 20vh;
+  max-width: 40vw;
+  background-color: white;
+  position: "absolute";
 }
 
 .pagination {
   display: flex;
   margin-top: 20px;
 }
-  
+
 .pagination_item {
   border: 1px solid blue;
   border-radius: 5px;
@@ -62,6 +63,7 @@
   float: left;
   padding: 8px 16px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .active_item {
@@ -69,4 +71,6 @@
   color: white;
 }
 
-.pagination_item:hover:not(.active_item) {background-color: #ddd;}
+.pagination_item:hover:not(.active_item) {
+  background-color: #ddd;
+}

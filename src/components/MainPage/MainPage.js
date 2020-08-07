@@ -8,18 +8,11 @@ import AddBookModal from "../AddBookModal/AddBookModal";
 import SideBar from "../SideBar/SideBar";
 
 function MainPage(props) {
-  console.log("Books", props);
   const [currentBooks, setCurrentBooks] = React.useState([]);
   const [offset, setOffset] = React.useState(0);
   const [open, setOpen] = React.useState(false);
-  const [currentPage, setCurrentPage] = React.useState(
-    +props.match.params.page
-  );
-  const [booksPerPage] = React.useState(3);
-  console.log("offset", offset);
+  const [currentPage, setCurrentPage] = React.useState(1);
 
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
   const countBooks = props.books.count;
 
   const pageNumbers = [];
@@ -32,15 +25,8 @@ function MainPage(props) {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (localStorage.token && !props.books.books.length) {
-      props.getBooks({ offset: offset });
-    }
-  }, []);
-
   useMemo(() => setCurrentBooks(props.books.books), [props.books.books]);
   useMemo(() => setOffset((currentPage - 1) * 2), [currentPage]);
-  useMemo(() => props.getBooks({ offset: offset }), [currentPage]);
 
   for (let i = 1; i <= Math.ceil(countBooks / 2); i++) {
     pageNumbers.push(i);
@@ -48,16 +34,17 @@ function MainPage(props) {
 
   const addActiveClass = (number) => (event) => {
     setOffset((number - 1) * 2);
-    const active = document.querySelector(`.${classes.active_item}`);
-    active.classList.remove(classes.active_item);
-    event.currentTarget.classList.add(classes.active_item);
     setCurrentPage(number);
   };
 
   console.log(props);
   return (
     <div className={classes.mainPage}>
-      <SideBar offset={offset} getBooks={props.getBooks} />
+      <SideBar
+        offset={offset}
+        getBooks={props.getBooks}
+        books={props.books.books}
+      />
       <div className={classes.book_list}>
         {currentBooks.map((book, index) => {
           return (
@@ -80,35 +67,33 @@ function MainPage(props) {
           Add book
         </Button>
         <div className={classes.pagination}>
-          <Link
-            className={classes.customLink}
+          <div
+            className={classes.pagination_item}
             onClick={() => setCurrentPage(1)}
-            to="/books/1"
           >
             В начало
-          </Link>
+          </div>
           {pageNumbers.map((number, index) => (
-            <div key={index}>
-              <Link
-                onClick={addActiveClass(number)}
-                className={`${classes.pagination_item} ${
-                  +props.match.params.page === number ? classes.active_item : ""
-                } `}
-                to={`/books/${number}`}
-              >
-                {number}
-              </Link>
+            <div
+              key={index}
+              onClick={addActiveClass(number)}
+              className={
+                number === currentPage
+                  ? `${classes.pagination_item} ${classes.active_item}`
+                  : classes.pagination_item
+              }
+            >
+              {number}
             </div>
           ))}
           <div hidden={pageNumbers.length <= currentPage}>
-            <Link
+            <div
               className={classes.customLink}
               onClick={() => setCurrentPage(currentPage + 1)}
-              to={`/books/${currentPage + 1}`}
               hidden={true}
             >
               Дальше
-            </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -52,7 +52,7 @@ function App(props) {
             load={props.user.loading}
             store={props}
             component={MainPage}
-            path="/books/:page"
+            path="/books"
           />
           <Route path="/:book" render={() => <Book />} />
         </Switch>

@@ -1,22 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./Search.module.css";
 import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
 import { TextField } from "@material-ui/core";
+import { connect } from "react-redux";
+
+import { getSearchBooks } from "../../actions/actionCreators";
 
 function Search(props) {
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = useState(null);
+  const [searchText, setSearchText] = useState("");
   const filter = createFilterOptions();
 
-  const top100Films = [
-    { title: "The Shawshank Redemption", year: 1994 },
-    { title: "The Godfather", year: 1972 },
-    { title: "The Godfather: Part II", year: 1974 },
-    { title: "The Dark Knight", year: 2008 },
-    { title: "12 Angry Men", year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-  ];
+  console.log(props);
+
+  useEffect(() => {
+    if (searchText) {
+      props.getSearchBooks({ search: searchText });
+    }
+  }, [searchText]);
 
   return (
     <Autocomplete
@@ -38,6 +41,7 @@ function Search(props) {
         }
       }}
       filterOptions={(options, params) => {
+        setSearchText(params.inputValue);
         const filtered = filter(options, params);
 
         // Suggest the creation of a new value
@@ -54,31 +58,26 @@ function Search(props) {
       clearOnBlur
       handleHomeEndKeys
       id="free-solo-with-text-demo"
-      options={top100Films}
+      options={props.searched_books.searched_books}
       getOptionLabel={(option) => {
-        // Value selected with enter, right from the input
-        if (typeof option === "string") {
-          return option;
-        }
-        // Add "xxx" option created dynamically
-        if (option.inputValue) {
-          return option.inputValue;
-        }
-        // Regular option
         return option.title;
       }}
       renderOption={(option) => option.title}
       style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Free solo with text demo"
-          variant="outlined"
-        />
+        <TextField {...params} label="Search books" variant="outlined" />
       )}
     />
   );
 }
 
-export default Search;
+const mapStateToProps = (store) => ({
+  searched_books: store.searched_books,
+});
+
+const mapDispatchToProps = {
+  getSearchBooks,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
