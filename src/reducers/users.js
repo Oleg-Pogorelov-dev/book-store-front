@@ -1,22 +1,33 @@
-import { REQUESTED_MY_PROFILE, REQUESTED_MY_PROFILE_SUCCEEDED } from "../actions/actions";
+import {
+  REQUESTED_MY_PROFILE,
+  REQUESTED_MY_PROFILE_SUCCEEDED,
+} from "../actions/actions";
 
-export function reducerMyProfile(state = {
-  email: '',
-  loading: false
-}, action) {
-    switch (action.type) {
-      case REQUESTED_MY_PROFILE:
-          return {
-            email: '',
-            loading: true
-          }
-      case REQUESTED_MY_PROFILE_SUCCEEDED:
-        return {
-          email: action.data.user,
-          loading: false
-        }
-      default:
-        return state;
-    }
-};
-  
+export function reducerMyProfile(
+  state = {
+    email: "",
+    id: null,
+    loading: false,
+    orders: [],
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUESTED_MY_PROFILE:
+      return {
+        email: "",
+        id: null,
+        loading: true,
+        orders: [],
+      };
+    case REQUESTED_MY_PROFILE_SUCCEEDED:
+      return {
+        email: action.data.user.email,
+        id: action.data.user.id,
+        loading: false,
+        orders: action.data.orders,
+      };
+    default:
+      return state;
+  }
+}

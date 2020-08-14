@@ -1,16 +1,16 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import classes from "./Registration.module.css";
 import { postAuth } from "../../actions/actionCreators";
 import { connect } from "react-redux";
 
 function Registration(props) {
+  const { postAuth } = props;
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwrod_confirmation, setPasswrodConfirmation] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [redirect, setRedirect] = React.useState(false);
 
   const onInputChange = (e) => {
     const { name } = e.currentTarget;
@@ -28,13 +28,12 @@ function Registration(props) {
       setMessage("Неверный email.");
     } else {
       e.preventDefault();
-      props.postAuth({
+      postAuth({
         url: "http://localhost:3000/registration",
         email,
         password,
         setMessage,
       });
-      setRedirect(true);
     }
   };
 

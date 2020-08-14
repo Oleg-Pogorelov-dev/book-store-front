@@ -1,0 +1,6 @@
+.book {
+  margin: 10px auto;
+  max-width: 10vw;
+  border: 1px solid gray;
+  border-radius: 5px;
+}

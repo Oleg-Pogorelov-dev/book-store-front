@@ -7,7 +7,6 @@ import {
 import fetchRefreshToken from "./refresh_token";
 
 export default function* fetchSearchBooksAsync(options) {
-  console.log("search", options.data.search);
   yield put(requestSearchBooks());
   const data = yield call(() => {
     return axios({
@@ -19,8 +18,6 @@ export default function* fetchSearchBooksAsync(options) {
       },
       headers: {
         "Content-Type": "application/json",
-        "Access-Token": localStorage.getItem("token"),
-        "Refresh-Token": localStorage.getItem("refresh-token"),
       },
     })
       .then((response) => {

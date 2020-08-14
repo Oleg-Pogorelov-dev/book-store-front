@@ -4,10 +4,28 @@ import { Checkbox, FormControlLabel } from "@material-ui/core";
 import Search from "../Search/Search";
 
 function SideBar(props) {
+  const {
+    setOffset,
+    setCurrentPage,
+    getBooks,
+    offset,
+    searchValue,
+    setSearchValue,
+    books,
+  } = props;
+
   const [genresSelected, setGenresSelected] = useState([]);
   const [checkboxes, setCheckboxes] = React.useState({
     comedy: false,
     detective: false,
+    esoterics: false,
+    novel: false,
+    fantasy: false,
+  });
+
+  const [sort, setSort] = useState({
+    order_item: "id",
+    order_type: "DESC",
   });
 
   const checkGenres = () => {
@@ -17,14 +35,40 @@ function SideBar(props) {
         genres.push(key);
       }
     }
+    setOffset(0);
+    setCurrentPage(1);
     setGenresSelected(genres);
   };
 
   useMemo(() => checkGenres(), [checkboxes]);
 
   useEffect(() => {
-    props.getBooks({ offset: props.offset, genre: genresSelected });
-  }, [props.offset, genresSelected]);
+    getBooks({
+      offset: offset,
+      genre: genresSelected,
+      title: searchValue,
+      order_item: sort.order_item,
+      order_type: sort.order_type,
+    });
+  }, [offset, searchValue, genresSelected, sort]);
+
+  const onSortClick = (e) => {
+    const name_sort = e.target.attributes[1].nodeValue;
+
+    if (name_sort === sort.order_item) {
+      setSort({
+        order_type: sort.order_type === "ASC" ? "DESC" : "ASC",
+        order_item: name_sort,
+      });
+    }
+
+    if (name_sort !== sort.order_item) {
+      setSort({
+        order_type: "ASC",
+        order_item: name_sort,
+      });
+    }
+  };
 
   const handleChange = (event) => {
     setCheckboxes({ ...checkboxes, [event.target.name]: event.target.checked });
@@ -32,13 +76,51 @@ function SideBar(props) {
 
   return (
     <div className={classes.drawer}>
-      <Search books={props.books} getBooks={props.getBooks} />
+      <label>Сортировать по:</label>
+      <div className={classes.sort}>
+        <div
+          className={classes.sort_item}
+          name="price"
+          onClick={(e) => onSortClick(e)}
+        >
+          Цене
+        </div>
+        <div
+          className={classes.sort_item}
+          name="title"
+          onClick={(e) => onSortClick(e)}
+        >
+          Названию
+        </div>
+        <div
+          className={classes.sort_item}
+          name="genre"
+          onClick={(e) => onSortClick(e)}
+        >
+          Жанру
+        </div>
+        <div
+          className={classes.sort_item}
+          name="id"
+          onClick={(e) => onSortClick(e)}
+        >
+          Дате
+        </div>
+      </div>
+      <Search
+        setSearchValue={setSearchValue}
+        setOffset={setOffset}
+        setCurrentPage={setCurrentPage}
+        searchValue={searchValue}
+        books={books}
+        getBooks={getBooks}
+      />
       <div className={classes.genre}>
         <div>Жанры</div>
         <FormControlLabel
           control={
             <Checkbox
-              checked={checkboxes.checkedA}
+              checked={checkboxes.comedy}
               onChange={handleChange}
               name="comedy"
               color="primary"
@@ -49,13 +131,46 @@ function SideBar(props) {
         <FormControlLabel
           control={
             <Checkbox
-              checked={checkboxes.checkedB}
+              checked={checkboxes.detective}
               onChange={handleChange}
               name="detective"
               color="primary"
             />
           }
           label="Детектив"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkboxes.esoterics}
+              onChange={handleChange}
+              name="esoterics"
+              color="primary"
+            />
+          }
+          label="Эзотерика"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkboxes.novel}
+              onChange={handleChange}
+              name="novel"
+              color="primary"
+            />
+          }
+          label="Роман"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkboxes.fantasy}
+              onChange={handleChange}
+              name="fantasy"
+              color="primary"
+            />
+          }
+          label="Фэнтези"
         />
       </div>
     </div>

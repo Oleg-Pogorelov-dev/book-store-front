@@ -3,31 +3,28 @@ import axios from "axios";
 import {
   requestMyProfile,
   requestMyProfileSuccess,
+  getRefreshToken,
 } from "../actions/actionCreators";
-import fetchRefreshToken from "./refresh_token";
 
-export default function* fetchMyProfileAsync() {
+export default function* fetchMyProfileAsync(options) {
   yield put(requestMyProfile());
-  const data = yield call(() => {
-    return axios({
-      url: "http://localhost:3000/profile",
-      method: "GET",
-      responseType: "json",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Token": localStorage.getItem("token"),
-      },
-    })
-      .then((response) => {
-        return response.data;
-      })
-      .catch((err) => {
-        console.log(err.response);
-        if (err.response.status === 401) {
-          return fetchRefreshToken();
-        }
-        return console.log(err);
+  try {
+    const data = yield call(() => {
+      return axios({
+        url: "http://localhost:3000/profile",
+        method: "GET",
+        responseType: "json",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Token": options.token,
+        },
       });
-  });
-  yield put(requestMyProfileSuccess(data));
+    });
+    yield put(requestMyProfileSuccess(data.data));
+  } catch (err) {
+    console.log(err.response);
+    if (err.response.status === 401) {
+      yield put(getRefreshToken());
+    }
+  }
 }

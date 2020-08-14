@@ -14,8 +14,6 @@ export default function* fetchBookAsync(id) {
       },
       headers: {
         "Content-Type": "application/json",
-        "Access-Token": localStorage.getItem("token"),
-        "Refresh-Token": localStorage.getItem("refresh-token"),
       },
     })
       .then((response) => {

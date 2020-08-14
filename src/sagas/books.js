@@ -13,11 +13,12 @@ export default function* fetchBooksAsync(options) {
       params: {
         offset: options.data.offset,
         genre: options.data.genre,
+        title: options.data.title,
+        order_item: options.data.order_item,
+        order_type: options.data.order_type,
       },
       headers: {
         "Content-Type": "application/json",
-        "Access-Token": localStorage.getItem("token"),
-        "Refresh-Token": localStorage.getItem("refresh-token"),
       },
     })
       .then((response) => {

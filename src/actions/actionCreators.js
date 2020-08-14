@@ -10,17 +10,23 @@ import {
   REQUESTED_BOOK_SUCCEEDED,
   FETCHED_AUTH,
   FETCHED_ADD_BOOK,
+  FETCHED_ADD_AUTHOR,
   FETCHED_SEARCH_BOOKS,
   REQUESTED_SEARCH_BOOKS_SUCCEEDED,
   REQUESTED_SEARCH_BOOKS,
+  REQUESTED_NOTIFICATION_TRUE,
+  REQUESTED_NOTIFICATION_FALSE,
+  SAVE_TOKEN,
+  REQUESTED_REFRESH_TOKEN,
+  FETCHED_CREATE_ORDER,
 } from "./actions";
 
 export const postAuth = (data) => {
   return { type: FETCHED_AUTH, data };
 };
 
-export const getMyProfile = () => {
-  return { type: FETCHED_MY_PROFILE };
+export const getMyProfile = (token) => {
+  return { type: FETCHED_MY_PROFILE, token };
 };
 
 export const requestMyProfile = () => {
@@ -69,4 +75,28 @@ export const requestBookSuccess = (data) => {
 
 export const addBook = (data) => {
   return { type: FETCHED_ADD_BOOK, data };
+};
+
+export const addAuthor = (data) => {
+  return { type: FETCHED_ADD_AUTHOR, data };
+};
+
+export const setNotificationTrue = () => {
+  return { type: REQUESTED_NOTIFICATION_TRUE };
+};
+
+export const setNotificationFalse = () => {
+  return { type: REQUESTED_NOTIFICATION_FALSE };
+};
+
+export const saveToken = () => {
+  return { type: SAVE_TOKEN };
+};
+
+export const getRefreshToken = () => {
+  return { type: REQUESTED_REFRESH_TOKEN };
+};
+
+export const createOrder = (data) => {
+  return { type: FETCHED_CREATE_ORDER, data };
 };

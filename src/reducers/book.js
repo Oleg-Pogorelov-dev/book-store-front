@@ -4,6 +4,8 @@ const initialState = {
   id: 0,
   title: "",
   img: "",
+  author: "",
+  price: "",
   loading: false,
 };
 
@@ -14,6 +16,8 @@ export function reducerBook(state = initialState, action) {
         id: 0,
         title: "",
         img: "",
+        author: "",
+        price: "",
         loading: true,
       };
     case REQUESTED_BOOK_SUCCEEDED:
@@ -21,6 +25,8 @@ export function reducerBook(state = initialState, action) {
         id: action.data.book.id,
         title: action.data.book.title,
         img: action.data.book.img,
+        author: action.data.author,
+        price: action.data.book.price,
         loading: false,
       };
     default:

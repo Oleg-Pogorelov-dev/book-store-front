@@ -1,15 +1,15 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import classes from "./Login.module.css";
 import { connect } from "react-redux";
 import { postAuth } from "../../actions/actionCreators";
 
 function Login(props) {
+  const { postAuth } = props;
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [message, setMessage] = React.useState("");
-  const [redirect, setRedirect] = React.useState(false);
 
   const onInputChange = (e) => {
     const { name } = e.currentTarget;
@@ -20,13 +20,12 @@ function Login(props) {
 
   const onBtnClick = (e) => {
     e.preventDefault();
-    props.postAuth({
+    postAuth({
       url: "http://localhost:3000/login",
       email,
       password,
       setMessage,
     });
-    setRedirect(true);
   };
 
   return (

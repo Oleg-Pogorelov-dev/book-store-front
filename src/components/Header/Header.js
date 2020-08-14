@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
 import { Button, Typography, Toolbar } from "@material-ui/core";
 import classes from "./Header.module.css";
+import { connect } from "react-redux";
+import { setNotificationTrue } from "../../actions/actionCreators";
 
 function Header(props) {
+  const { notification, user, setNotificationTrue, load } = props;
+
+  useEffect(() => {
+    if (localStorage.getItem("basket")) {
+      setNotificationTrue();
+    }
+  }, [setNotificationTrue]);
+
   const logOut = (e) => {
     e.preventDefault();
     localStorage.setItem("token", "");
@@ -13,7 +24,7 @@ function Header(props) {
 
   return (
     <div className={classes.header}>
-      {props.load ? (
+      {load ? (
         <div></div>
       ) : (
         <AppBar position="fixed">
@@ -23,8 +34,16 @@ function Header(props) {
                 Book store
               </Link>
             </Typography>
-            {!props.user ? (
+            {!user ? (
               <div className={classes.tabs_log}>
+                <Link className={classes.basket} to="/basket">
+                  <ShoppingBasketIcon />
+                </Link>
+                {notification.notification ? (
+                  <div className={classes.notification}></div>
+                ) : (
+                  <div></div>
+                )}
                 <Link to="/registration" className={classes.link}>
                   <Button color="inherit">Sign up</Button>
                 </Link>
@@ -34,11 +53,19 @@ function Header(props) {
               </div>
             ) : (
               <div className={classes.tabs_log}>
+                <Link className={classes.basket} to="/basket">
+                  <ShoppingBasketIcon />
+                </Link>
+                {notification.notification ? (
+                  <div className={classes.notification}></div>
+                ) : (
+                  <div></div>
+                )}
                 <Button color="inherit" onClick={logOut}>
                   Log Out
                 </Button>
                 <Link to="/profile" className={classes.link}>
-                  <Button color="inherit">{props.user}</Button>
+                  <Button color="inherit">{user}</Button>
                 </Link>
               </div>
             )}
@@ -49,4 +76,12 @@ function Header(props) {
   );
 }
 
-export default Header;
+const mapStateToProps = (store) => {
+  return { notification: store.notification };
+};
+
+const mapDispatchToProps = {
+  setNotificationTrue,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

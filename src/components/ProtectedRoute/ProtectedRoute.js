@@ -2,32 +2,28 @@ import React from "react";
 import { Redirect, Route } from "react-router-dom";
 
 const ProtectedRoute = (props) => {
-  const Component = props.component;
-  const isAuthenticated = props.user;
+  const { component, user, load, path, store } = props;
 
-  if (props.load) {
+  const Component = component;
+  const isAuthenticated = user;
+
+  if (load) {
     return <div>Load</div>;
   }
 
-  if (
-    isAuthenticated &&
-    (props.path === "/login" || props.path === "/registration")
-  ) {
+  if (isAuthenticated && (path === "/login" || path === "/registration")) {
     return <Redirect to="/books" />;
   }
 
-  if (
-    !isAuthenticated &&
-    !(props.path === "/login" || props.path === "/registration")
-  ) {
+  if (!isAuthenticated && !(path === "/login" || path === "/registration")) {
     return <Redirect to="/login" />;
   }
 
   return (
     <Route
-      path={props.path}
+      path={path}
       render={() => {
-        return <Component page={props.store} user={props.user} />;
+        return <Component page={store} user={user} />;
       }}
     />
   );
