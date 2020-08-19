@@ -7,6 +7,10 @@ export function reducerMyProfile(
   state = {
     email: "",
     id: null,
+    first_name: "",
+    last_name: "",
+    phone: null,
+    avatar: "",
     loading: false,
     orders: [],
   },
@@ -17,6 +21,10 @@ export function reducerMyProfile(
       return {
         email: "",
         id: null,
+        first_name: "",
+        last_name: "",
+        phone: null,
+        avatar: "",
         loading: true,
         orders: [],
       };
@@ -24,6 +32,10 @@ export function reducerMyProfile(
       return {
         email: action.data.user.email,
         id: action.data.user.id,
+        first_name: action.data.user.first_name,
+        last_name: action.data.user.last_name,
+        phone: action.data.user.phone,
+        avatar: action.data.user.avatar,
         loading: false,
         orders: action.data.orders,
       };

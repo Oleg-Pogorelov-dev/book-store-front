@@ -1,27 +1,23 @@
 import { call } from "redux-saga/effects";
-import axios from "axios";
-import fetchMyProfileAsync from "./profile";
+import { fetchMyProfileAsync } from "./profile";
 import fetchBooksAsync from "./books";
+import axiosInstance from "../api/axiosInstance";
 
 export default function* fetchAuthAsync(data) {
-  yield call(() => {
-    return axios({
-      url: data.data.url,
-      method: "POST",
-      data: {
+  try {
+    const tokens = yield call(() => {
+      return axiosInstance.post(data.data.url, {
         email: data.data.email,
         password: data.data.password,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("refresh-token", response.data.refresh_token);
-      })
-      .catch((err) => data.data.setMessage(err.response.data.message));
-  });
+      });
+    });
+
+    localStorage.setItem("token", tokens.data.token);
+    localStorage.setItem("refresh-token", tokens.data.refresh_token);
+  } catch (e) {
+    console.log(e);
+  }
+
   yield fetchMyProfileAsync();
   yield fetchBooksAsync();
 }

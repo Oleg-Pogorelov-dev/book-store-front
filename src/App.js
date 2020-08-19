@@ -66,14 +66,15 @@ function App(props) {
   );
 }
 
-const mapStateToProps = (store) => ({
-  user: store.user,
-  token: store.token,
-});
+const connectFunction = connect(
+  (store) => ({
+    user: store.user,
+    token: store.token,
+  }),
+  {
+    getMyProfile,
+    saveToken,
+  }
+);
 
-const mapDispatchToProps = {
-  getMyProfile,
-  saveToken,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connectFunction(App);

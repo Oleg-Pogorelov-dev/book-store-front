@@ -11,6 +11,7 @@ function Book(props) {
 
   const idBook = +props.match.params.book.split("_")[1];
   const [message, setMessage] = useState("");
+  const [num_img, setNumImg] = useState(0);
 
   const onBtnClick = () => {
     let order = [];
@@ -30,6 +31,12 @@ function Book(props) {
     }
   };
 
+  const onDeleteBook = () => {};
+
+  const onMoveImg = (index) => {
+    setNumImg(index);
+  };
+
   useEffect(() => {
     getBook(idBook);
   }, [getBook, idBook]);
@@ -37,17 +44,72 @@ function Book(props) {
   return (
     <div>
       <h1>{book.title}</h1>
-      <img
-        className={classes.book_cover}
-        src={`http://localhost:3000/${book.img[0]}`}
-        alt="Oops!"
-      />
-      <div>Цена {book.price} руб.</div>
-      <div>Автор: {book.author}</div>
+      <div className={classes.book_info}>
+        <div className={classes.images}>
+          <div className={classes.all_images_book}>
+            {book.img.length
+              ? book.img.map((img, index) => {
+                  return (
+                    <div key={index} className={classes.img_wrapper}>
+                      <img
+                        className={classes.book_img}
+                        onMouseMove={() => onMoveImg(index)}
+                        src={`http://localhost:3000/${img}`}
+                        alt="Oops!"
+                      />
+                    </div>
+                  );
+                })
+              : ""}
+          </div>
+          <div className={classes.cover_wrapper}>
+            <img
+              className={classes.book_cover}
+              src={`http://localhost:3000/${book.img[num_img]}`}
+              alt="Oops!"
+            />
+            <br />
+            <div className={classes.btn}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onDeleteBook}
+              >
+                Редактировать книгу
+              </Button>
+            </div>
+            <br />
+            <div className={classes.btn}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={onDeleteBook}
+              >
+                Удалить книгу
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className={classes.discription}>
+          <div>Автор: {book.author}</div>
+          <br />
+          <div>О книге:</div>
+          <br />
+          <div>{book.description}</div>
+        </div>
+        <div className={classes.order_block}>
+          <div>Цена {book.price} руб.</div>
+          <Button
+            className={classes.order_button}
+            onClick={onBtnClick}
+            variant="contained"
+            color="primary"
+          >
+            Добавить в корзину
+          </Button>
+        </div>
+      </div>
       <label hidden={!message}>{message}</label>
-      <Button onClick={onBtnClick} variant="contained" color="primary">
-        Добавить в корзину
-      </Button>
     </div>
   );
 }

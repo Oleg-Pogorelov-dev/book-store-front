@@ -1,7 +1,11 @@
 import { takeEvery } from "redux-saga/effects";
 
 import fetchAuthAsync from "./auth";
-import fetchMyProfileAsync from "./profile";
+import {
+  fetchMyProfileAsync,
+  fetchUpdateAvatar,
+  fetchUpdateInfo,
+} from "./profile";
 import fetchBooksAsync from "./books";
 import fetchSearchBooksAsync from "./search_book";
 import fetchBookAsync from "./book";
@@ -21,4 +25,6 @@ export function* watchFetch() {
   yield takeEvery("FETCHED_ADD_AUTHOR", fetchAddAuthorAsync);
   yield takeEvery("REQUESTED_REFRESH_TOKEN", fetchRefreshToken);
   yield takeEvery("FETCHED_CREATE_ORDER", fetchCreateOrderAsync);
+  yield takeEvery("UPDATE_AVATAR", fetchUpdateAvatar);
+  yield takeEvery("UPDATE_INFO", fetchUpdateInfo);
 }

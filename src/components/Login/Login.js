@@ -3,6 +3,7 @@ import { TextField, Button } from "@material-ui/core";
 import classes from "./Login.module.css";
 import { connect } from "react-redux";
 import { postAuth } from "../../actions/actionCreators";
+import { Link } from "react-router-dom";
 
 function Login(props) {
   const { postAuth } = props;
@@ -21,7 +22,7 @@ function Login(props) {
   const onBtnClick = (e) => {
     e.preventDefault();
     postAuth({
-      url: "http://localhost:3000/login",
+      url: "login",
       email,
       password,
       setMessage,
@@ -30,7 +31,7 @@ function Login(props) {
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Вход</h1>
       <label className={classes.error} hidden={!message}>
         {message}
       </label>
@@ -54,9 +55,16 @@ function Login(props) {
         onChange={onInputChange}
       />
       <br />
-      <Button onClick={onBtnClick} variant="contained" color="primary">
-        Sign in
-      </Button>
+      <div className={classes.button}>
+        <Button onClick={onBtnClick} variant="contained" color="primary">
+          Войти
+        </Button>
+      </div>
+      <br />
+      <div>
+        Нет учетной записи? Тогда пройдите{" "}
+        <Link to="/registration">регистрацию</Link>
+      </div>
     </div>
   );
 }

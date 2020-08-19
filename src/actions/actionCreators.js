@@ -19,6 +19,8 @@ import {
   SAVE_TOKEN,
   REQUESTED_REFRESH_TOKEN,
   FETCHED_CREATE_ORDER,
+  UPDATE_AVATAR,
+  UPDATE_INFO,
 } from "./actions";
 
 export const postAuth = (data) => {
@@ -99,4 +101,12 @@ export const getRefreshToken = () => {
 
 export const createOrder = (data) => {
   return { type: FETCHED_CREATE_ORDER, data };
+};
+
+export const updateAvatar = (data) => {
+  return { type: UPDATE_AVATAR, data };
+};
+
+export const updateInfo = (data) => {
+  return { type: UPDATE_INFO, data };
 };

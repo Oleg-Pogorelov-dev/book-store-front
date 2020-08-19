@@ -8,11 +8,9 @@ import AddBookModal from "../AddBookModal/AddBookModal";
 import SideBar from "../SideBar/SideBar";
 import AddAuthorModal from "../AddAuthorModal/AddAuthorModal";
 import { makeStyles } from "@material-ui/styles";
-import Loading from "../Loading/Loading";
 
 function MainPage(props) {
-  console.log("PROPS", props);
-  const { books, getBooks } = props;
+  const { books, getBooks, user } = props;
 
   const [currentBooks, setCurrentBooks] = React.useState([]);
   const [offset, setOffset] = React.useState(0);
@@ -20,7 +18,8 @@ function MainPage(props) {
   const [openAuthorModal, setOpenAuthorModal] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [searchValue, setSearchValue] = React.useState(null);
-  // const [img, setImg] = React.useState(books.books.img[0]);
+  const [numImg, setNumImg] = React.useState(0);
+  const [currentBookClass, setCurrentBookClass] = React.useState("");
 
   const countBooks = books.count;
 
@@ -57,9 +56,12 @@ function MainPage(props) {
     setCurrentPage(number);
   };
 
-  const onMoveImg = (e) => {
-    // const = e.target.width
-    // console.dir(e.target.name);
+  const onMoveImg = (index) => (e) => {
+    setNumImg(index);
+  };
+
+  const onMouseOverBook = (book_class) => (e) => {
+    setCurrentBookClass(book_class);
   };
 
   const classesMUI = useStyles();
@@ -77,26 +79,59 @@ function MainPage(props) {
       />
       <div className={classes.book_list}>
         {currentBooks.map((book, index) => {
+          const book_class = `book_${book.id}`;
           return (
-            <Link className={classes.link} key={index} to={`/book_${book.id}`}>
+            <Link
+              onMouseOver={onMouseOverBook(book_class)}
+              className={`${classes.link} ${book_class}`}
+              key={index}
+              to={`/book_${book.id}`}
+            >
               <div className={classes.img_blocks}>
                 {book.img.map((img, index) => {
-                  return <div key={index} className={classes.img_block}></div>;
+                  return (
+                    <div
+                      key={index}
+                      onMouseMove={onMoveImg(index)}
+                      className={classes.img_block}
+                    ></div>
+                  );
                 })}
               </div>
               <div className={classes.book}>
                 <img
-                  onMouseMove={onMoveImg}
                   className={classes.book_cover}
-                  src={`http://localhost:3000/${book.img[0]}`}
+                  src={
+                    books.books.length && currentBookClass === `book_${book.id}`
+                      ? `http://localhost:3000/${books.books[index].img[numImg]}`
+                      : books.books.length
+                      ? `http://localhost:3000/${books.books[index].img[0]}`
+                      : ""
+                  }
                   alt="Oops!"
                 />
+                <div className={classes.num_img}>
+                  {book.img.map((img, pointIndex) => {
+                    return (
+                      <div
+                        key={pointIndex}
+                        className={
+                          pointIndex === numImg &&
+                          currentBookClass === `book_${book.id}`
+                            ? `${classes.point} ${classes.current_point}`
+                            : `${classes.point}`
+                        }
+                      ></div>
+                    );
+                  })}
+                </div>
                 <br />
-                {book.title}
-                <br />
-                Жанр: {book.genre}
-                <br />
-                Цена: {book.price} руб.
+                <div className={classes.info}>
+                  <strong>{book.title}</strong>
+                  <br />
+                  <div>Жанр: {book.genre}</div>
+                  <div>Цена: {book.price} руб.</div>
+                </div>
               </div>
             </Link>
           );
@@ -106,22 +141,30 @@ function MainPage(props) {
         <div>К сожалению нечего не найдено.</div>
       ) : (
         <div className={classes.pagination_and_button}>
-          <Button
-            className={classesMUI.add_button}
-            variant="contained"
-            color="primary"
-            onClick={handleOpenAddBook}
-          >
-            Add book
-          </Button>
-          <Button
-            className={classesMUI.add_button}
-            variant="contained"
-            color="primary"
-            onClick={handleOpenAddAuthor}
-          >
-            Add Author
-          </Button>
+          {user === "admin" ? (
+            <Button
+              className={classesMUI.add_button}
+              variant="contained"
+              color="primary"
+              onClick={handleOpenAddBook}
+            >
+              Add book
+            </Button>
+          ) : (
+            ""
+          )}
+          {user === "admin" ? (
+            <Button
+              className={classesMUI.add_button}
+              variant="contained"
+              color="primary"
+              onClick={handleOpenAddAuthor}
+            >
+              Add Author
+            </Button>
+          ) : (
+            ""
+          )}
           <div className={classes.pagination}>
             <div
               className={classes.pagination_item}

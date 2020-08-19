@@ -18,7 +18,8 @@ function AddBook(props) {
   const [message, setMessage] = React.useState("");
   const [genre, setGenre] = React.useState("");
   const [price, setPrice] = React.useState(null);
-  const [img, setImg] = React.useState({});
+  const [img, setImg] = React.useState([]);
+  const [description, setDescription] = React.useState("");
   console.log("img", img);
 
   const genres = ["comedy", "detective", "esoterics", "novel", "fantasy"];
@@ -26,6 +27,8 @@ function AddBook(props) {
   const onInputChange = (e) => {
     e.currentTarget.name === "title"
       ? setTitle(e.currentTarget.value)
+      : e.currentTarget.name === "description"
+      ? setDescription(e.currentTarget.value)
       : setPrice(e.currentTarget.value);
   };
 
@@ -42,6 +45,7 @@ function AddBook(props) {
     formData.append("title", title);
     formData.append("genre", genre);
     formData.append("price", price);
+    formData.append("description", description);
     addBook({ formData, setMessage });
   };
 
@@ -58,41 +62,73 @@ function AddBook(props) {
         {message}
       </label>
       <br />
-      <TextField
-        name="title"
-        className={classes.input}
-        required
-        id="standard-required"
-        label="Title"
-        onChange={onInputChange}
-      />
-      <TextField
-        name="price"
-        type="number"
-        className={classes.input}
-        required
-        id="standard-required"
-        label="Price (RUB)"
-        onChange={onInputChange}
-      />
-      <FormControl className={classes.input}>
-        <InputLabel id="demo-simple-select-label">Genre</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={genre}
-          onChange={onSelectChange}
-        >
-          {genres.map((oneGenre, index) => {
-            return (
-              <MenuItem key={index} value={oneGenre}>
-                {oneGenre}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-
+      <div className={classes.wrapper}>
+        <TextField
+          name="title"
+          className={classes.input}
+          required
+          label="Title"
+          onChange={onInputChange}
+        />
+      </div>
+      <div className={classes.wrapper}>
+        <TextField
+          name="price"
+          type="number"
+          className={classes.input}
+          required
+          label="Price (RUB)"
+          onChange={onInputChange}
+        />
+      </div>
+      <div className={classes.wrapper}>
+        <FormControl className={classes.input}>
+          <InputLabel>Genre</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            value={genre}
+            onChange={onSelectChange}
+          >
+            {genres.map((oneGenre, index) => {
+              return (
+                <MenuItem key={index} value={oneGenre}>
+                  {oneGenre}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </div>
+      <div className={classes.wrapper}>
+        <FormControl className={classes.input}>
+          <InputLabel>Author</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            value={genre}
+            onChange={onSelectChange}
+          >
+            {genres.map((oneGenre, index) => {
+              return (
+                <MenuItem key={index} value={oneGenre}>
+                  {oneGenre}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </div>
+      <div className={classes.wrapper}>
+        <TextField
+          name="description"
+          multiline
+          rows={10}
+          className={classes.input}
+          required
+          variant="outlined"
+          label="Description"
+          onChange={onInputChange}
+        />
+      </div>
       <input type="file" multiple onChange={onFileChange} />
       <div className={classes.button}>
         <Button onClick={onBtnClick} variant="contained" color="primary">

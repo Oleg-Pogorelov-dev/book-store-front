@@ -14,22 +14,19 @@
 }
 
 .link {
-  position: relative;
   text-decoration: none;
+  color: black;
 }
 
 .book {
   position: relative;
+  top: -100%;
   margin-right: 10px;
   margin-bottom: 10px;
   height: 200px;
   width: 180px;
   border-radius: 5px;
-  z-index: 2;
-}
-
-.book:hover {
-  background-color: rgba(128, 128, 128, 0.473);
+  z-index: 1;
 }
 
 .book_cover {
@@ -57,10 +54,9 @@
 
 .paper {
   margin: 0 auto;
-  margin-top: 20vh;
+  margin-top: 10vh;
   max-width: 40vw;
   background-color: white;
-  position: "absolute";
 }
 
 .pagination {
@@ -94,13 +90,34 @@
 
 .img_blocks {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   height: 100%;
+  background-color: rgba(221, 221, 221, 0);
 }
 
 .img_block {
-  position: relative;
   flex: 1 1 auto;
   height: 100%;
+}
+
+.num_img {
+  display: flex;
+  justify-content: center;
+}
+
+.point {
+  height: 5px;
+  width: 5px;
+  margin-right: 3px;
+  background-color: rgba(128, 128, 128, 0.432);
+  border-radius: 50%;
+}
+
+.current_point {
+  height: 5px;
+  width: 5px;
+  margin-right: 3px;
+  border-radius: 50%;
+  background-color: blue;
 }

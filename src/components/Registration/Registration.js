@@ -3,6 +3,7 @@ import { TextField, Button } from "@material-ui/core";
 import classes from "./Registration.module.css";
 import { postAuth } from "../../actions/actionCreators";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 function Registration(props) {
   const { postAuth } = props;
@@ -29,7 +30,7 @@ function Registration(props) {
     } else {
       e.preventDefault();
       postAuth({
-        url: "http://localhost:3000/registration",
+        url: "registration",
         email,
         password,
         setMessage,
@@ -39,7 +40,7 @@ function Registration(props) {
 
   return (
     <div>
-      <h1>Registration</h1>
+      <h1>Регистрация</h1>
       <label className={classes.error} hidden={!message}>
         {message}
       </label>
@@ -73,9 +74,15 @@ function Registration(props) {
         onChange={onInputChange}
       />
       <br />
-      <Button onClick={onBtnClick} variant="contained" color="primary">
-        Sign up
-      </Button>
+      <div className={classes.button}>
+        <Button onClick={onBtnClick} variant="contained" color="primary">
+          Зарегистрироваться
+        </Button>
+      </div>
+      <br />
+      <div>
+        Есть учетная запись? <Link to="/login">Войти</Link>
+      </div>
     </div>
   );
 }

@@ -1,27 +1,15 @@
 import { call, put } from "redux-saga/effects";
-import axios from "axios";
 import { requestBook, requestBookSuccess } from "../actions/actionCreators";
+import axiosInstance from "../api/axiosInstance";
 
 export default function* fetchBookAsync(id) {
   yield put(requestBook());
   const data = yield call(() => {
-    return axios({
-      url: "http://localhost:3000/books/book",
-      method: "GET",
-      responseType: "json",
+    return axiosInstance("books/book", {
       params: {
         id: id.data,
       },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        return response.data;
-      })
-      .catch((err) => {
-        return console.log(err);
-      });
+    });
   });
-  yield put(requestBookSuccess(data));
+  yield put(requestBookSuccess(data.data));
 }

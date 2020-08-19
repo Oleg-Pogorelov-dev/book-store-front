@@ -33,6 +33,7 @@ function Basket(props) {
     };
     createOrder({ formData, setMessage });
     setBooks([]);
+    setNotificationFalse();
   };
 
   return (

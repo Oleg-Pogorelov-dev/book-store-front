@@ -6,6 +6,7 @@ const initialState = {
   img: "",
   author: "",
   price: "",
+  description: "",
   loading: false,
 };
 
@@ -18,6 +19,7 @@ export function reducerBook(state = initialState, action) {
         img: "",
         author: "",
         price: "",
+        description: "",
         loading: true,
       };
     case REQUESTED_BOOK_SUCCEEDED:
@@ -27,6 +29,7 @@ export function reducerBook(state = initialState, action) {
         img: action.data.book.img,
         author: action.data.author,
         price: action.data.book.price,
+        description: action.data.book.description,
         loading: false,
       };
     default:

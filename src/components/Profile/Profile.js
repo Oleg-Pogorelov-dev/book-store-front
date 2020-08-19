@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
   Typography,
-  CardActions,
-  Button,
   makeStyles,
+  Button,
+  Modal,
 } from "@material-ui/core";
+import UserUpdate from "../UserUpdate/UserUpdate";
+import { updateAvatar } from "../../actions/actionCreators";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles({
   card_order: {
@@ -38,78 +41,159 @@ const useStyles = makeStyles({
   pos: {
     marginBottom: 12,
   },
+  paper: {
+    margin: "0 auto",
+    padding: "20px",
+    marginTop: "20vh",
+    maxWidth: "40vw",
+    backgroundColor: "white",
+  },
+  info: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "20px",
+    margin: "10px auto",
+    fontSize: "20px",
+    fontWeight: "bold",
+    backgroundColor: "rgba(128, 128, 128, 0.1)",
+    maxWidth: "30%",
+  },
+  avatar: {
+    height: "200px",
+    width: "200px",
+    borderRadius: "50%",
+  },
 });
 
 function Profile(props) {
-  const { user } = props;
+  const { user, updateAvatar } = props;
+
+  const [modalOpen, setModalOpen] = useState(false);
   console.log(props);
+
+  const onBtnClick = (e) => {
+    e.preventDefault();
+    setModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+  };
+
+  const onFileChange = (e) => {
+    const input = document.getElementById("upload-photo");
+    const formData = new FormData();
+    formData.append("avatar", input.files[0]);
+    formData.append("email", user.email);
+    updateAvatar(formData);
+  };
 
   const classes = useStyles();
 
   return (
     <div>
       <h1>Мой профиль</h1>
-      <form>
+      <label htmlFor="upload-photo">
+        <img
+          className={classes.avatar}
+          src={`http://localhost:3000/${user.avatar}`}
+          alt="Oops!"
+        />
+      </label>
+      <input
+        hidden
+        onChange={onFileChange}
+        type="file"
+        name="photo"
+        id="upload-photo"
+      />
+      <div className={classes.info}>
         <div>
-          <label>Email: {`${user.email}`}</label>
+          <div>Email: </div>
+          <div>Имя: </div>
+          <div>Фамилия: </div>
+          <div>Телефон: </div>
         </div>
-        {user.orders.length ? (
-          <div>
-            <h3>История заказов</h3>
-            {user.orders.map((order, index) => {
-              return (
-                <Card key={index} className={classes.card_order}>
-                  <CardContent>
-                    <Typography color="textSecondary" gutterBottom>
-                      Заказ № {order.id}
-                    </Typography>
-                    <Typography
-                      className={classes.text_left}
-                      variant="h5"
-                      component="h2"
-                    >
-                      Товары:
-                    </Typography>
-                    {order.books.map((book, index) => {
-                      return (
-                        <div className={classes.card_content} key={index}>
-                          <Typography
-                            className={classes.text_left}
-                            color="textSecondary"
-                          >
-                            {book.title}
-                          </Typography>
-                          {/* <div className={classes.underscore}></div> */}
-                          <Typography
-                            className={classes.text_right}
-                            color="textSecondary"
-                          >
-                            {book.price} руб.
-                          </Typography>
-                        </div>
-                      );
-                    })}
-                    <Typography
-                      className={classes.text_left}
-                      variant="h5"
-                      component="h2"
-                    >
-                      Сумма заказа
-                    </Typography>
-                  </CardContent>
-                  {/* <CardActions>
+        <div>
+          <div>{`${user.email}`}</div>
+          <div>{user.first_name ? `${user.first_name}` : "Пусто"}</div>
+          <div>{user.last_name ? `${user.last_name}` : "Пусто"}</div>
+          <div>{user.phone ? `${user.phone}` : "Пусто"}</div>
+        </div>
+      </div>
+      <Button onClick={onBtnClick} variant="contained" color="primary">
+        Добавить информацию
+      </Button>
+      {user.orders.length ? (
+        <div>
+          <h3>История заказов</h3>
+          {user.orders.map((order, index) => {
+            return (
+              <Card key={index} className={classes.card_order}>
+                <CardContent>
+                  <Typography color="textSecondary" gutterBottom>
+                    Заказ № {order.id}
+                  </Typography>
+                  <Typography
+                    className={classes.text_left}
+                    variant="h5"
+                    component="h2"
+                  >
+                    Товары:
+                  </Typography>
+                  {order.books.map((book, index) => {
+                    return (
+                      <div className={classes.card_content} key={index}>
+                        <Typography
+                          className={classes.text_left}
+                          color="textSecondary"
+                        >
+                          {book.title}
+                        </Typography>
+                        {/* <div className={classes.underscore}></div> */}
+                        <Typography
+                          className={classes.text_right}
+                          color="textSecondary"
+                        >
+                          {book.price} руб.
+                        </Typography>
+                      </div>
+                    );
+                  })}
+                  <Typography
+                    className={classes.text_left}
+                    variant="h5"
+                    component="h2"
+                  >
+                    Сумма заказа
+                  </Typography>
+                </CardContent>
+                {/* <CardActions>
                     <Button size="small">Learn More</Button>
                   </CardActions> */}
-                </Card>
-              );
-            })}
-          </div>
-        ) : (
-          <div>Нет совершенных покупок</div>
-        )}
-      </form>
+              </Card>
+            );
+          })}
+        </div>
+      ) : (
+        <div>Нет совершенных покупок</div>
+      )}
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div className={classes.paper}>
+          <UserUpdate />
+        </div>
+      </Modal>
     </div>
   );
 }
 
-export default Profile;
+const mapDispatchToProps = {
+  updateAvatar,
+};
+
+export default connect(null, mapDispatchToProps)(Profile);
