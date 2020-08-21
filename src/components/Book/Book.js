@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { getBook, setNotificationTrue } from "../../actions/actionCreators";
+import { withRouter, Link, Redirect } from "react-router-dom";
+import {
+  getBook,
+  setNotificationTrue,
+  deleteBook,
+} from "../../actions/actionCreators";
 import classes from "./Book.module.css";
-import { Button } from "@material-ui/core";
+import { Button, Modal } from "@material-ui/core";
+import UpdateBookModal from "../UpdateBookModal/UpdateBookModal";
 
 function Book(props) {
-  console.log("BOOK", props.book);
-  const { book, setNotificationTrue, getBook } = props;
+  const { book, setNotificationTrue, getBook, deleteBook, user } = props;
 
   const idBook = +props.match.params.book.split("_")[1];
   const [message, setMessage] = useState("");
   const [num_img, setNumImg] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const onBtnClick = () => {
     let order = [];
@@ -31,16 +37,30 @@ function Book(props) {
     }
   };
 
-  const onDeleteBook = () => {};
+  const onDeleteBook = () => {
+    deleteBook(book.id);
+    setRedirect(true);
+  };
+
+  const onUpdateBook = () => {
+    setOpenModal(true);
+  };
 
   const onMoveImg = (index) => {
     setNumImg(index);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
   };
 
   useEffect(() => {
     getBook(idBook);
   }, [getBook, idBook]);
 
+  if (redirect) {
+    return <Redirect to="/books" />;
+  }
   return (
     <div>
       <h1>{book.title}</h1>
@@ -69,29 +89,43 @@ function Book(props) {
               alt="Oops!"
             />
             <br />
-            <div className={classes.btn}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onDeleteBook}
-              >
-                Редактировать книгу
-              </Button>
-            </div>
-            <br />
-            <div className={classes.btn}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={onDeleteBook}
-              >
-                Удалить книгу
-              </Button>
-            </div>
+            {user.email === "admin" ? (
+              <div>
+                <div className={classes.btn}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onUpdateBook}
+                  >
+                    Редактировать книгу
+                  </Button>
+                </div>
+                <br />
+                <div className={classes.btn}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={onDeleteBook}
+                  >
+                    Удалить книгу
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
         <div className={classes.discription}>
-          <div>Автор: {book.author}</div>
+          <div>
+            Автор:
+            <Link
+              className={classes.link_author}
+              to={`/author/author_${book.author_id}`}
+            >
+              {book.author}
+            </Link>
+          </div>
           <br />
           <div>О книге:</div>
           <br />
@@ -110,6 +144,16 @@ function Book(props) {
         </div>
       </div>
       <label hidden={!message}>{message}</label>
+      <Modal
+        open={openModal}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div className={classes.paper}>
+          <UpdateBookModal book={book} />
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -121,6 +165,7 @@ const mapStateToProps = (store) => {
 const mapDispatchToProps = {
   getBook,
   setNotificationTrue,
+  deleteBook,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Book));

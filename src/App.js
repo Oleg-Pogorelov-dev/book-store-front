@@ -13,9 +13,9 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { getMyProfile, saveToken } from "./actions/actionCreators";
 import Book from "./components/Book/Book";
 import Basket from "./components/Basket/Basket";
+import Author from "./components/Author/Author";
 
 function App(props) {
-  console.log(props);
   const { getMyProfile, token, saveToken, user } = props;
 
   useEffect(() => {
@@ -59,7 +59,8 @@ function App(props) {
             )}
           />
           <Route path="/basket" render={() => <Basket user={user} />} />
-          <Route path="/:book" render={() => <Book />} />
+          <Route path="/author/:author" render={() => <Author />} />
+          <Route path="/:book" render={() => <Book user={user} />} />
         </Switch>
       </div>
     </BrowserRouter>

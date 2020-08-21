@@ -1,6 +1,17 @@
 .book {
   margin: 10px auto;
-  max-width: 10vw;
-  border: 1px solid gray;
-  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  max-width: 80%;
+}
+
+.btn {
+  margin: 10px;
+}
+
+.card_order {
+  margin: 20px auto;
+  color: rgba(48, 48, 48, 0.7);
+  background-color: #ecffe6;
+  max-width: 40%;
 }

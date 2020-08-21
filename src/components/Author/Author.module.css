@@ -1,0 +1,22 @@
+.main {
+  display: flex;
+  justify-content: space-around;
+}
+
+.img_wrapper {
+  flex-grow: 1;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 3;
+}
+
+.author_name {
+  font-weight: bold;
+}
+
+.info_discription {
+  align-self: flex-start;
+}

@@ -21,6 +21,14 @@ import {
   FETCHED_CREATE_ORDER,
   UPDATE_AVATAR,
   UPDATE_INFO,
+  FETCHED_SEARCH_AUTHORS,
+  REQUESTED_SEARCH_AUTHORS_SUCCEEDED,
+  REQUESTED_SEARCH_AUTHORS,
+  FETCHED_AUTHOR,
+  REQUESTED_AUTHOR,
+  REQUESTED_AUTHOR_SUCCEEDED,
+  UPDATE_BOOK,
+  DELETE_BOOK,
 } from "./actions";
 
 export const postAuth = (data) => {
@@ -79,6 +87,18 @@ export const addBook = (data) => {
   return { type: FETCHED_ADD_BOOK, data };
 };
 
+export const getSearchAuthors = (data) => {
+  return { type: FETCHED_SEARCH_AUTHORS, data };
+};
+
+export const requestSearchAuthors = (data) => {
+  return { type: REQUESTED_SEARCH_AUTHORS, data };
+};
+
+export const requestSearchAuthorsSuccess = (data) => {
+  return { type: REQUESTED_SEARCH_AUTHORS_SUCCEEDED, data };
+};
+
 export const addAuthor = (data) => {
   return { type: FETCHED_ADD_AUTHOR, data };
 };
@@ -109,4 +129,24 @@ export const updateAvatar = (data) => {
 
 export const updateInfo = (data) => {
   return { type: UPDATE_INFO, data };
+};
+
+export const getAuthor = (data) => {
+  return { type: FETCHED_AUTHOR, data };
+};
+
+export const requestAuthor = (data) => {
+  return { type: REQUESTED_AUTHOR, data };
+};
+
+export const requestAuthorSuccess = (data) => {
+  return { type: REQUESTED_AUTHOR_SUCCEEDED, data };
+};
+
+export const updateBook = (data) => {
+  return { type: UPDATE_BOOK, data };
+};
+
+export const deleteBook = (data) => {
+  return { type: DELETE_BOOK, data };
 };

@@ -10,6 +10,7 @@ import {
 import UserUpdate from "../UserUpdate/UserUpdate";
 import { updateAvatar } from "../../actions/actionCreators";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   card_order: {
@@ -24,11 +25,9 @@ const useStyles = makeStyles({
   },
   text_left: {
     margin: "5px",
-    // textAlign: "left",
   },
   text_right: {
     margin: "5px",
-    // textAlign: "right",
   },
   underscore: {
     height: "22px",
@@ -63,13 +62,25 @@ const useStyles = makeStyles({
     width: "200px",
     borderRadius: "50%",
   },
+  link: {
+    textDecoration: "none",
+  },
+  labels: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
+  values: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+  },
 });
 
 function Profile(props) {
   const { user, updateAvatar } = props;
 
   const [modalOpen, setModalOpen] = useState(false);
-  console.log(props);
 
   const onBtnClick = (e) => {
     e.preventDefault();
@@ -108,13 +119,13 @@ function Profile(props) {
         id="upload-photo"
       />
       <div className={classes.info}>
-        <div>
+        <div className={classes.labels}>
           <div>Email: </div>
           <div>Имя: </div>
           <div>Фамилия: </div>
           <div>Телефон: </div>
         </div>
-        <div>
+        <div className={classes.values}>
           <div>{`${user.email}`}</div>
           <div>{user.first_name ? `${user.first_name}` : "Пусто"}</div>
           <div>{user.last_name ? `${user.last_name}` : "Пусто"}</div>
@@ -122,7 +133,7 @@ function Profile(props) {
         </div>
       </div>
       <Button onClick={onBtnClick} variant="contained" color="primary">
-        Добавить информацию
+        Изменить информацию
       </Button>
       {user.orders.length ? (
         <div>
@@ -148,9 +159,13 @@ function Profile(props) {
                           className={classes.text_left}
                           color="textSecondary"
                         >
-                          {book.title}
+                          <Link
+                            className={classes.link}
+                            to={`/book_${book.id}`}
+                          >
+                            {book.title}
+                          </Link>
                         </Typography>
-                        {/* <div className={classes.underscore}></div> */}
                         <Typography
                           className={classes.text_right}
                           color="textSecondary"
@@ -165,12 +180,11 @@ function Profile(props) {
                     variant="h5"
                     component="h2"
                   >
-                    Сумма заказа
+                    Сумма заказа{" "}
+                    {order.books.reduce((sum, book) => sum + book.price, 0)}{" "}
+                    руб.
                   </Typography>
                 </CardContent>
-                {/* <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions> */}
               </Card>
             );
           })}

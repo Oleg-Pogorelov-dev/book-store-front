@@ -1,20 +1,28 @@
 import { takeEvery } from "redux-saga/effects";
 
-import fetchAuthAsync from "./auth";
 import {
+  fetchAuthAsync,
   fetchMyProfileAsync,
   fetchUpdateAvatar,
   fetchUpdateInfo,
-} from "./profile";
-import fetchBooksAsync from "./books";
-import fetchSearchBooksAsync from "./search_book";
-import fetchBookAsync from "./book";
-import fetchAddBookAsync from "./add_book";
-import fetchAddAuthorAsync from "./add_author";
+} from "./auth";
+
+import {
+  fetchBooksAsync,
+  fetchAddBookAsync,
+  fetchBookAsync,
+  fetchSearchBooksAsync,
+  fetchUpdateBook,
+  fetchDeleteBook,
+} from "./books";
+import {
+  fetchAddAuthorAsync,
+  fetchSearchAuthorsAsync,
+  fetchAuthorAsync,
+} from "./author";
 import fetchRefreshToken from "./refresh_token";
 import fetchCreateOrderAsync from "./create_order";
 
-// Sagas
 export function* watchFetch() {
   yield takeEvery("FETCHED_AUTH", fetchAuthAsync);
   yield takeEvery("FETCHED_MY_PROFILE", fetchMyProfileAsync);
@@ -27,4 +35,8 @@ export function* watchFetch() {
   yield takeEvery("FETCHED_CREATE_ORDER", fetchCreateOrderAsync);
   yield takeEvery("UPDATE_AVATAR", fetchUpdateAvatar);
   yield takeEvery("UPDATE_INFO", fetchUpdateInfo);
+  yield takeEvery("FETCHED_SEARCH_AUTHORS", fetchSearchAuthorsAsync);
+  yield takeEvery("FETCHED_AUTHOR", fetchAuthorAsync);
+  yield takeEvery("UPDATE_BOOK", fetchUpdateBook);
+  yield takeEvery("DELETE_BOOK", fetchDeleteBook);
 }

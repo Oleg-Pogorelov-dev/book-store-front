@@ -6,7 +6,6 @@ import { updateInfo } from "../../actions/actionCreators";
 
 function UserUpdate(props) {
   const { user, updateInfo } = props;
-  console.log("AVA", user);
 
   const [first_name, setFirstName] = React.useState("");
   const [last_name, setLastName] = React.useState("");
@@ -36,6 +35,7 @@ function UserUpdate(props) {
       <h1>Добавить Доп. информацию о пользователе:</h1>
       <br />
       <TextField
+        defaultValue={user.first_name || ""}
         name="first_name"
         className={classes.input}
         id="standard-required"
@@ -43,6 +43,7 @@ function UserUpdate(props) {
         onChange={onInputChange}
       />
       <TextField
+        defaultValue={user.last_name || ""}
         name="last_name"
         className={classes.input}
         id="standard-required"
@@ -50,6 +51,7 @@ function UserUpdate(props) {
         onChange={onInputChange}
       />
       <TextField
+        defaultValue={user.phone || ""}
         name="phone"
         type="number"
         className={classes.input}
@@ -59,7 +61,7 @@ function UserUpdate(props) {
       />
       <div className={classes.button}>
         <Button onClick={onBtnClick} variant="contained" color="primary">
-          Добавить информацию
+          Изменить информацию
         </Button>
       </div>
     </div>

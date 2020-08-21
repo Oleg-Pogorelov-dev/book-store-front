@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextField, Button } from "@material-ui/core";
 import classes from "./AddAuthorModal.module.css";
 import { connect } from "react-redux";
@@ -7,11 +7,10 @@ import { addAuthor } from "../../actions/actionCreators";
 function AddAuthor(props) {
   const { addAuthor } = props;
 
-  const [name, setName] = React.useState("");
-  const [message, setMessage] = React.useState("");
-  const [text, setText] = React.useState("");
-
-  console.log("state", name, text);
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [text, setText] = useState("");
+  const [img, setImg] = useState({});
 
   const onInputChange = (e) => {
     e.currentTarget.name === "name"
@@ -21,11 +20,15 @@ function AddAuthor(props) {
 
   const onBtnClick = (e) => {
     e.preventDefault();
-    const formData = {
-      name: name,
-      text: text,
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("text", text);
+    formData.append("img", img);
     addAuthor({ formData, setMessage });
+  };
+
+  const onFileChange = (e) => {
+    setImg(e.target.files[0]);
   };
 
   return (
@@ -54,7 +57,7 @@ function AddAuthor(props) {
         label="Text"
         onChange={onInputChange}
       />
-
+      <input type="file" onChange={onFileChange} />
       <div className={classes.button}>
         <Button onClick={onBtnClick} variant="contained" color="primary">
           Add author

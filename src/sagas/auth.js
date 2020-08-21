@@ -1,9 +1,12 @@
-import { call } from "redux-saga/effects";
-import { fetchMyProfileAsync } from "./profile";
-import fetchBooksAsync from "./books";
+import { call, put } from "redux-saga/effects";
+import { fetchBooksAsync } from "./books";
 import axiosInstance from "../api/axiosInstance";
+import {
+  requestMyProfile,
+  requestMyProfileSuccess,
+} from "../actions/actionCreators";
 
-export default function* fetchAuthAsync(data) {
+export function* fetchAuthAsync(data) {
   try {
     const tokens = yield call(() => {
       return axiosInstance.post(data.data.url, {
@@ -18,6 +21,39 @@ export default function* fetchAuthAsync(data) {
     console.log(e);
   }
 
+  yield call(() => fetchMyProfileAsync(), fetchBooksAsync());
+}
+
+export function* fetchMyProfileAsync() {
+  yield put(requestMyProfile());
+  try {
+    const data = yield call(async () => {
+      return axiosInstance("profile");
+    });
+    yield put(requestMyProfileSuccess(data.data));
+  } catch (err) {
+    console.log(err.response);
+  }
+}
+
+export function* fetchUpdateAvatar(options) {
+  try {
+    yield call(async () => {
+      return axiosInstance.put("update_avatar", options.data);
+    });
+  } catch (err) {
+    console.log(err.response);
+  }
   yield fetchMyProfileAsync();
-  yield fetchBooksAsync();
+}
+
+export function* fetchUpdateInfo(options) {
+  try {
+    yield call(async () => {
+      return axiosInstance.put("update_info", options.data);
+    });
+  } catch (err) {
+    console.log(err.response);
+  }
+  yield fetchMyProfileAsync();
 }

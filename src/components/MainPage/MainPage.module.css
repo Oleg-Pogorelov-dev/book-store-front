@@ -9,7 +9,6 @@
   margin: 0 auto;
   max-width: 800px;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 
@@ -23,17 +22,18 @@
   top: -100%;
   margin-right: 10px;
   margin-bottom: 10px;
-  height: 200px;
+  height: 300px;
   width: 180px;
   border-radius: 5px;
   z-index: 1;
+  word-break: break-all;
 }
 
 .book_cover {
   margin: 0 auto;
   margin-top: 10px;
-  width: 50%;
   height: 60%;
+  max-width: 90%;
 }
 
 .pagination_and_button {
@@ -120,4 +120,8 @@
   margin-right: 3px;
   border-radius: 50%;
   background-color: blue;
+}
+
+.empty {
+  margin-bottom: 20%;
 }

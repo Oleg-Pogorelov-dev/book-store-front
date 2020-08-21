@@ -7,19 +7,17 @@ import {
   MenuItem,
   FormControl,
 } from "@material-ui/core";
-import classes from "./AddBookModal.module.css";
+import classes from "./UpdateBookModal.module.css";
 import { connect } from "react-redux";
-import { addBook } from "../../actions/actionCreators";
+import { updateBook } from "../../actions/actionCreators";
 import SearchAuthor from "../SearchAuthor/SearchAuthor";
 
-function AddBook(props) {
-  const { addBook } = props;
+function UpdateBookModal(props) {
+  const { book, updateBook } = props;
 
   const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
   const [genre, setGenre] = useState("");
   const [price, setPrice] = useState(null);
-  const [img, setImg] = useState([]);
   const [description, setDescription] = useState("");
   const [searchValue, setSearchValue] = useState(null);
 
@@ -39,31 +37,24 @@ function AddBook(props) {
 
   const onBtnClick = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    for (let i = 0; i < img.length; i++) {
-      formData.append("img", img[i]);
-    }
-    formData.append("title", title);
-    formData.append("name", searchValue);
-    formData.append("genre", genre);
-    formData.append("price", price);
-    formData.append("description", description);
-    addBook({ formData, setMessage });
-  };
-
-  const onFileChange = (e) => {
-    setImg(e.target.files);
+    const formData = {
+      title,
+      genre,
+      price,
+      description,
+      author: searchValue,
+      id: book.id,
+    };
+    updateBook(formData);
   };
 
   return (
     <div className={classes.main}>
-      <h1>Add Book</h1>
-      <label className={classes.error} hidden={!message}>
-        {message}
-      </label>
+      <h1>Update book</h1>
       <br />
       <div className={classes.wrapper}>
         <TextField
+          defaultValue={book.title || ""}
           name="title"
           className={classes.input}
           required
@@ -73,6 +64,7 @@ function AddBook(props) {
       </div>
       <div className={classes.wrapper}>
         <TextField
+          defaultValue={book.price || ""}
           name="price"
           type="number"
           className={classes.input}
@@ -85,6 +77,7 @@ function AddBook(props) {
         <FormControl className={classes.input}>
           <InputLabel>Genre</InputLabel>
           <Select
+            defaultValue={book.genre || ""}
             labelId="demo-simple-select-label"
             value={genre}
             onChange={onSelectChange}
@@ -107,6 +100,7 @@ function AddBook(props) {
       </div>
       <div className={classes.wrapper}>
         <TextField
+          defaultValue={book.description || ""}
           name="description"
           multiline
           rows={10}
@@ -117,10 +111,9 @@ function AddBook(props) {
           onChange={onInputChange}
         />
       </div>
-      <input type="file" multiple onChange={onFileChange} />
       <div className={classes.button}>
         <Button onClick={onBtnClick} variant="contained" color="primary">
-          Add book
+          Update book
         </Button>
       </div>
     </div>
@@ -128,7 +121,7 @@ function AddBook(props) {
 }
 
 const mapDispatchToProps = {
-  addBook,
+  updateBook,
 };
 
-export default connect(null, mapDispatchToProps)(AddBook);
+export default connect(null, mapDispatchToProps)(UpdateBookModal);

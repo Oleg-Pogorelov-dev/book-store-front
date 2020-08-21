@@ -138,7 +138,7 @@ function MainPage(props) {
         })}
       </div>
       {!books.books.length && !books.loading ? (
-        <div>К сожалению нечего не найдено.</div>
+        <div className={classes.empty}>К сожалению нечего не найдено.</div>
       ) : (
         <div className={classes.pagination_and_button}>
           {user === "admin" ? (
