@@ -26,16 +26,20 @@ export function* fetchBooksAsync(options) {
 }
 
 export function* fetchAddBookAsync(data) {
-  yield call(() => {
-    return axiosInstance.post("books/add_book", data.data.formData);
-  });
-  yield fetchBooksAsync({
-    data: {
-      offset: 0,
-      order_item: "id",
-      order_type: "DESC",
-    },
-  });
+  try {
+    yield call(() => {
+      return axiosInstance.post("books/add_book", data.data.formData);
+    });
+    yield fetchBooksAsync({
+      data: {
+        offset: 0,
+        order_item: "id",
+        order_type: "DESC",
+      },
+    });
+  } catch (e) {
+    data.data.setMessage(e.response.data.message);
+  }
 }
 
 export function* fetchBookAsync(options) {

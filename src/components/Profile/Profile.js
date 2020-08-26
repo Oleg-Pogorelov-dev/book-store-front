@@ -107,7 +107,7 @@ function Profile(props) {
       <label htmlFor="upload-photo">
         <img
           className={classes.avatar}
-          src={`http://localhost:3000/${user.avatar}`}
+          src={`${process.env.REACT_APP_BASE_URL}${user.avatar}`}
           alt="Oops!"
         />
       </label>
@@ -199,7 +199,7 @@ function Profile(props) {
         aria-describedby="simple-modal-description"
       >
         <div className={classes.paper}>
-          <UserUpdate />
+          <UserUpdate setModalOpen={setModalOpen} />
         </div>
       </Modal>
     </div>

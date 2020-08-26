@@ -45,14 +45,14 @@ function MainPage(props) {
   };
 
   useMemo(() => setCurrentBooks(books.books), [books.books]);
-  useMemo(() => setOffset((currentPage - 1) * 9), [currentPage]);
+  useMemo(() => setOffset((currentPage - 1) * 12), [currentPage]);
 
-  for (let i = 1; i <= Math.ceil(countBooks / 9); i++) {
+  for (let i = 1; i <= Math.ceil(countBooks / 12); i++) {
     pageNumbers.push(i);
   }
 
   const addActiveClass = (number) => (event) => {
-    setOffset((number - 1) * 9);
+    setOffset((number - 1) * 12);
     setCurrentPage(number);
   };
 
@@ -103,9 +103,9 @@ function MainPage(props) {
                   className={classes.book_cover}
                   src={
                     books.books.length && currentBookClass === `book_${book.id}`
-                      ? `http://localhost:3000/${books.books[index].img[numImg]}`
+                      ? `${process.env.REACT_APP_BASE_URL}${books.books[index].img[numImg]}`
                       : books.books.length
-                      ? `http://localhost:3000/${books.books[index].img[0]}`
+                      ? `${process.env.REACT_APP_BASE_URL}${books.books[index].img[0]}`
                       : ""
                   }
                   alt="Oops!"
@@ -203,7 +203,7 @@ function MainPage(props) {
         aria-describedby="simple-modal-description"
       >
         <div className={classes.paper}>
-          <AddBookModal />
+          <AddBookModal setOpenBookModal={setOpenBookModal} />
         </div>
       </Modal>
       <Modal
@@ -213,7 +213,7 @@ function MainPage(props) {
         aria-describedby="simple-modal-description"
       >
         <div className={classes.paper}>
-          <AddAuthorModal />
+          <AddAuthorModal setOpenAuthorModal={setOpenAuthorModal} />
         </div>
       </Modal>
     </div>

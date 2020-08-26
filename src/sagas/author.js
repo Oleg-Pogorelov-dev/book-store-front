@@ -8,9 +8,13 @@ import {
 } from "../actions/actionCreators";
 
 export function* fetchAddAuthorAsync(data) {
-  yield call(() => {
-    return axiosInstance.post("authors/add_author", data.data.formData);
-  });
+  try {
+    yield call(() => {
+      return axiosInstance.post("authors/add_author", data.data.formData);
+    });
+  } catch (e) {
+    data.data.setMessage(e.response.data.message);
+  }
 }
 
 export function* fetchSearchAuthorsAsync(options) {

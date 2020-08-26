@@ -1,4 +1,8 @@
-import { REQUESTED_BOOK, REQUESTED_BOOK_SUCCEEDED } from "../actions/actions";
+import {
+  REQUESTED_BOOK,
+  REQUESTED_BOOK_SUCCEEDED,
+  REQUESTED_BOOK_ERROR,
+} from "../actions/actions";
 
 const initialState = {
   id: 0,
@@ -9,6 +13,7 @@ const initialState = {
   price: "",
   description: "",
   loading: false,
+  error: "",
 };
 
 export function reducerBook(state = initialState, action) {
@@ -23,6 +28,7 @@ export function reducerBook(state = initialState, action) {
         price: "",
         description: "",
         loading: true,
+        error: "",
       };
     case REQUESTED_BOOK_SUCCEEDED:
       return {
@@ -34,6 +40,19 @@ export function reducerBook(state = initialState, action) {
         price: action.data.book.price,
         description: action.data.book.description,
         loading: false,
+        error: "",
+      };
+    case REQUESTED_BOOK_ERROR:
+      return {
+        id: 0,
+        title: "",
+        img: "",
+        author: "",
+        author_id: null,
+        price: "",
+        description: "",
+        loading: false,
+        error: action.data.message,
       };
     default:
       return state;

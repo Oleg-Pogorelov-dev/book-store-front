@@ -23,9 +23,16 @@
   margin: 10px;
 }
 
+.buttons {
+  display: flex;
+}
+
 .error {
   color: #e90c0cf5;
   background-color: #ee170825;
-  border: 1px solid #e90c0cf5;
   border-radius: 5px;
+}
+
+.error_for_genres {
+  color: red;
 }

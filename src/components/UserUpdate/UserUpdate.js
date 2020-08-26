@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { updateInfo } from "../../actions/actionCreators";
 
 function UserUpdate(props) {
-  const { user, updateInfo } = props;
+  const { user, updateInfo, setModalOpen } = props;
 
   const [first_name, setFirstName] = React.useState("");
   const [last_name, setLastName] = React.useState("");
@@ -28,6 +28,11 @@ function UserUpdate(props) {
       phone,
     };
     updateInfo(formData);
+  };
+
+  const onBtnCancel = (e) => {
+    e.preventDefault();
+    setModalOpen(false);
   };
 
   return (
@@ -59,10 +64,17 @@ function UserUpdate(props) {
         label="Телефон"
         onChange={onInputChange}
       />
-      <div className={classes.button}>
-        <Button onClick={onBtnClick} variant="contained" color="primary">
-          Изменить информацию
-        </Button>
+      <div className={classes.buttons}>
+        <div className={classes.button}>
+          <Button onClick={onBtnClick} variant="contained" color="primary">
+            Изменить информацию
+          </Button>
+        </div>
+        <div className={classes.button}>
+          <Button onClick={onBtnCancel} variant="contained" color="primary">
+            Cancel
+          </Button>
+        </div>
       </div>
     </div>
   );

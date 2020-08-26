@@ -1,11 +1,10 @@
 import { combineReducers } from "redux";
-import { reducerMyProfile } from "./users";
+import { reducerMyProfile } from "./user";
 import { reducerBooks } from "./books";
 import { reducerBook } from "./book";
 import { reducerAuthor } from "./author";
 import { reducerSearchedBooks } from "./searched_books";
 import { reducerNotification } from "./notification";
-import { reducerToken } from "./token";
 import { reducerSearchedAuthors } from "./searched_authors";
 
 export const rootReducer = combineReducers({
@@ -16,5 +15,4 @@ export const rootReducer = combineReducers({
   book: reducerBook,
   author: reducerAuthor,
   notification: reducerNotification,
-  token: reducerToken,
 });

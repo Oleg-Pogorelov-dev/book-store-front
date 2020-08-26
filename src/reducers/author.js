@@ -1,6 +1,7 @@
 import {
   REQUESTED_AUTHOR,
   REQUESTED_AUTHOR_SUCCEEDED,
+  REQUESTED_AUTHOR_ERROR,
 } from "../actions/actions";
 
 const initialState = {
@@ -9,6 +10,7 @@ const initialState = {
   img: "",
   text: "",
   loading: false,
+  error: "",
 };
 
 export function reducerAuthor(state = initialState, action) {
@@ -20,6 +22,7 @@ export function reducerAuthor(state = initialState, action) {
         img: "",
         text: "",
         loading: true,
+        error: "",
       };
     case REQUESTED_AUTHOR_SUCCEEDED:
       return {
@@ -28,6 +31,16 @@ export function reducerAuthor(state = initialState, action) {
         img: action.data.author.img,
         text: action.data.author.text,
         loading: false,
+        error: "",
+      };
+    case REQUESTED_AUTHOR_ERROR:
+      return {
+        id: 0,
+        name: "",
+        img: "",
+        text: "",
+        loading: false,
+        error: action.data.message,
       };
     default:
       return state;

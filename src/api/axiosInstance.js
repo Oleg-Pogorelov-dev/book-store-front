@@ -3,16 +3,19 @@ import { store } from "../store/configureStore";
 import { getRefreshToken } from "../actions/actionCreators";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/",
+  baseURL: process.env.REACT_APP_BASE_URL,
 });
+
+export let accessToken;
+
+export const setAccessToken = (token) => (accessToken = token);
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.token;
+    accessToken = localStorage.token;
+    if (!accessToken) return config;
 
-    if (!token) return config;
-
-    config.headers["access-token"] = token;
+    config.headers["Authorization"] = `Bearer ${accessToken}`;
 
     return config;
   },
@@ -27,7 +30,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (
-      !error.response.data.message &&
+      error.response.data.message === "Token expired" &&
       error.response.statusText === "Unauthorized"
     ) {
       store.dispatch(getRefreshToken());

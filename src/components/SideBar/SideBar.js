@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import classes from "./SideBar.module.css";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
+
 import Search from "../Search/Search";
 
 function SideBar(props) {
@@ -76,31 +77,55 @@ function SideBar(props) {
 
   return (
     <div className={classes.drawer}>
-      <label>Сортировать по:</label>
+      <p>Сортировать по:</p>
       <div className={classes.sort}>
         <div
-          className={classes.sort_item}
+          className={
+            sort.order_item === "price" && sort.order_type === "ASC"
+              ? classes.sort_item + " " + classes.current_sort_up
+              : sort.order_item === "price" && sort.order_type === "DESC"
+              ? classes.sort_item + " " + classes.current_sort_down
+              : classes.sort_item
+          }
           name="price"
           onClick={(e) => onSortClick(e)}
         >
           Цене
         </div>
         <div
-          className={classes.sort_item}
+          className={
+            sort.order_item === "title" && sort.order_type === "ASC"
+              ? classes.sort_item + " " + classes.current_sort_up
+              : sort.order_item === "title" && sort.order_type === "DESC"
+              ? classes.sort_item + " " + classes.current_sort_down
+              : classes.sort_item
+          }
           name="title"
           onClick={(e) => onSortClick(e)}
         >
           Названию
         </div>
         <div
-          className={classes.sort_item}
+          className={
+            sort.order_item === "genre" && sort.order_type === "ASC"
+              ? classes.sort_item + " " + classes.current_sort_up
+              : sort.order_item === "genre" && sort.order_type === "DESC"
+              ? classes.sort_item + " " + classes.current_sort_down
+              : classes.sort_item
+          }
           name="genre"
           onClick={(e) => onSortClick(e)}
         >
           Жанру
         </div>
         <div
-          className={classes.sort_item}
+          className={
+            sort.order_item === "id" && sort.order_type === "ASC"
+              ? classes.sort_item + " " + classes.current_sort_up
+              : sort.order_item === "id" && sort.order_type === "DESC"
+              ? classes.sort_item + " " + classes.current_sort_down
+              : classes.sort_item
+          }
           name="id"
           onClick={(e) => onSortClick(e)}
         >

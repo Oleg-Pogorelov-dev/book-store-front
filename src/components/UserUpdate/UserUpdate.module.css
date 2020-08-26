@@ -33,6 +33,10 @@ label {
   margin: 10px;
 }
 
+.buttons {
+  display: flex;
+}
+
 .error {
   color: #e90c0cf5;
   background-color: #ee170825;

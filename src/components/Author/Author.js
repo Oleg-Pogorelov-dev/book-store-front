@@ -15,7 +15,11 @@ function Author(props) {
   return (
     <div className={classes.main}>
       <div className={classes.img_wrapper}>
-        <img src={`http://localhost:3000/${author.img}`} alt="Oops!" />
+        <img
+          className={classes.img}
+          src={`${process.env.REACT_APP_BASE_URL}${author.img}`}
+          alt="Oops!"
+        />
       </div>
       <div className={classes.info}>
         <p className={classes.author_name}>{author.name}</p>

@@ -13,7 +13,7 @@ import { updateBook } from "../../actions/actionCreators";
 import SearchAuthor from "../SearchAuthor/SearchAuthor";
 
 function UpdateBookModal(props) {
-  const { book, updateBook } = props;
+  const { book, updateBook, setOpenModal } = props;
 
   const [title, setTitle] = useState("");
   const [genre, setGenre] = useState("");
@@ -46,6 +46,11 @@ function UpdateBookModal(props) {
       id: book.id,
     };
     updateBook(formData);
+  };
+
+  const onBtnCancel = (e) => {
+    e.preventDefault();
+    setOpenModal(false);
   };
 
   return (
@@ -111,10 +116,18 @@ function UpdateBookModal(props) {
           onChange={onInputChange}
         />
       </div>
-      <div className={classes.button}>
-        <Button onClick={onBtnClick} variant="contained" color="primary">
-          Update book
-        </Button>
+
+      <div className={classes.buttons}>
+        <div className={classes.button}>
+          <Button onClick={onBtnClick} variant="contained" color="primary">
+            Update book
+          </Button>
+        </div>
+        <div className={classes.button}>
+          <Button onClick={onBtnCancel} variant="contained" color="primary">
+            Cancel
+          </Button>
+        </div>
       </div>
     </div>
   );

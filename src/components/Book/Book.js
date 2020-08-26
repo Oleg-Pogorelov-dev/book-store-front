@@ -9,14 +9,16 @@ import {
 import classes from "./Book.module.css";
 import { Button, Modal } from "@material-ui/core";
 import UpdateBookModal from "../UpdateBookModal/UpdateBookModal";
+import DeleteBookModal from "../DeleteBookModal/DeleteBookModal";
 
 function Book(props) {
-  const { book, setNotificationTrue, getBook, deleteBook, user } = props;
+  const { book, setNotificationTrue, getBook, user } = props;
 
   const idBook = +props.match.params.book.split("_")[1];
   const [message, setMessage] = useState("");
   const [num_img, setNumImg] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
   const onBtnClick = () => {
@@ -38,8 +40,7 @@ function Book(props) {
   };
 
   const onDeleteBook = () => {
-    deleteBook(book.id);
-    setRedirect(true);
+    setConfirmModal(true);
   };
 
   const onUpdateBook = () => {
@@ -52,6 +53,7 @@ function Book(props) {
 
   const handleClose = () => {
     setOpenModal(false);
+    setConfirmModal(false);
   };
 
   useEffect(() => {
@@ -74,7 +76,7 @@ function Book(props) {
                       <img
                         className={classes.book_img}
                         onMouseMove={() => onMoveImg(index)}
-                        src={`http://localhost:3000/${img}`}
+                        src={`${process.env.REACT_APP_BASE_URL}${img}`}
                         alt="Oops!"
                       />
                     </div>
@@ -85,7 +87,7 @@ function Book(props) {
           <div className={classes.cover_wrapper}>
             <img
               className={classes.book_cover}
-              src={`http://localhost:3000/${book.img[num_img]}`}
+              src={`${process.env.REACT_APP_BASE_URL}${book.img[num_img]}`}
               alt="Oops!"
             />
             <br />
@@ -133,6 +135,7 @@ function Book(props) {
         </div>
         <div className={classes.order_block}>
           <div>Цена {book.price} руб.</div>
+          <p hidden={!message}>{message}</p>
           <Button
             className={classes.order_button}
             onClick={onBtnClick}
@@ -143,7 +146,7 @@ function Book(props) {
           </Button>
         </div>
       </div>
-      <label hidden={!message}>{message}</label>
+
       <Modal
         open={openModal}
         onClose={handleClose}
@@ -151,7 +154,21 @@ function Book(props) {
         aria-describedby="simple-modal-description"
       >
         <div className={classes.paper}>
-          <UpdateBookModal book={book} />
+          <UpdateBookModal book={book} setOpenModal={setOpenModal} />
+        </div>
+      </Modal>
+      <Modal
+        open={confirmModal}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <div className={classes.paper}>
+          <DeleteBookModal
+            bookId={book.id}
+            setRedirect={setRedirect}
+            setConfirmModal={setConfirmModal}
+          />
         </div>
       </Modal>
     </div>

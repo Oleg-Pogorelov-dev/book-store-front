@@ -18,7 +18,8 @@ function Header(props) {
 
   const logOut = (e) => {
     e.preventDefault();
-    localStorage.setItem("token", "");
+    localStorage.removeItem("token");
+    localStorage.removeItem("refresh-token");
     window.location.reload();
   };
 

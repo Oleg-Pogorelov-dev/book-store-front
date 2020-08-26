@@ -6,6 +6,8 @@ import {
   Select,
   MenuItem,
   FormControl,
+  FormHelperText,
+  makeStyles,
 } from "@material-ui/core";
 import classes from "./AddBookModal.module.css";
 import { connect } from "react-redux";
@@ -13,7 +15,7 @@ import { addBook } from "../../actions/actionCreators";
 import SearchAuthor from "../SearchAuthor/SearchAuthor";
 
 function AddBook(props) {
-  const { addBook } = props;
+  const { addBook, setOpenBookModal } = props;
 
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
@@ -24,6 +26,14 @@ function AddBook(props) {
   const [searchValue, setSearchValue] = useState(null);
 
   const genres = ["comedy", "detective", "esoterics", "novel", "fantasy"];
+
+  const useStyles = makeStyles(() => ({
+    error_for_genres: {
+      color: "red",
+    },
+  }));
+
+  const classesMUI = useStyles();
 
   const onInputChange = (e) => {
     e.currentTarget.name === "title"
@@ -48,7 +58,21 @@ function AddBook(props) {
     formData.append("genre", genre);
     formData.append("price", price);
     formData.append("description", description);
+
+    if (!title || !genre || !price || !description) {
+      return setMessage("Данное поле не может быть пустым");
+    }
+
+    if (!searchValue) {
+      return setMessage("Выберите автора");
+    }
+
     addBook({ formData, setMessage });
+  };
+
+  const onBtnCancel = (e) => {
+    e.preventDefault();
+    setOpenBookModal(false);
   };
 
   const onFileChange = (e) => {
@@ -58,17 +82,22 @@ function AddBook(props) {
   return (
     <div className={classes.main}>
       <h1>Add Book</h1>
-      <label className={classes.error} hidden={!message}>
+      <p
+        hidden={!message || message === "Данное поле не может быть пустым"}
+        className={classes.error}
+      >
         {message}
-      </label>
+      </p>
       <br />
       <div className={classes.wrapper}>
         <TextField
           name="title"
           className={classes.input}
-          required
+          required={true}
           label="Title"
           onChange={onInputChange}
+          helperText={!title ? message : ""}
+          error={!!message && !title}
         />
       </div>
       <div className={classes.wrapper}>
@@ -76,9 +105,11 @@ function AddBook(props) {
           name="price"
           type="number"
           className={classes.input}
-          required
+          required={true}
           label="Price (RUB)"
           onChange={onInputChange}
+          helperText={!price ? message : ""}
+          error={!!message && !price}
         />
       </div>
       <div className={classes.wrapper}>
@@ -88,6 +119,7 @@ function AddBook(props) {
             labelId="demo-simple-select-label"
             value={genre}
             onChange={onSelectChange}
+            error={!!message && !genre}
           >
             {genres.map((oneGenre, index) => {
               return (
@@ -97,6 +129,9 @@ function AddBook(props) {
               );
             })}
           </Select>
+          <FormHelperText className={classesMUI.error_for_genres}>
+            {!genre ? message : ""}
+          </FormHelperText>
         </FormControl>
       </div>
       <div className={classes.wrapper}>
@@ -115,13 +150,22 @@ function AddBook(props) {
           variant="outlined"
           label="Description"
           onChange={onInputChange}
+          helperText={!description ? message : ""}
+          error={!!message && !description}
         />
       </div>
       <input type="file" multiple onChange={onFileChange} />
-      <div className={classes.button}>
-        <Button onClick={onBtnClick} variant="contained" color="primary">
-          Add book
-        </Button>
+      <div className={classes.buttons}>
+        <div className={classes.button}>
+          <Button onClick={onBtnClick} variant="contained" color="primary">
+            Add book
+          </Button>
+        </div>
+        <div className={classes.button}>
+          <Button onClick={onBtnCancel} variant="contained" color="primary">
+            Cancel
+          </Button>
+        </div>
       </div>
     </div>
   );

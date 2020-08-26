@@ -23,55 +23,67 @@ function Registration(props) {
   };
 
   const onBtnClick = (e) => {
-    if (password !== passwrod_confirmation) {
-      setMessage("Подтверждение пароля и пароль не совпадают.");
-    } else if (!email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
-      setMessage("Неверный email.");
-    } else {
-      e.preventDefault();
-      postAuth({
-        url: "registration",
-        email,
-        password,
-        setMessage,
-      });
+    if (!password || !email || !passwrod_confirmation) {
+      return setMessage("Пожалуйста, заполните данное поле");
     }
+
+    if (password !== passwrod_confirmation) {
+      return setMessage("Подтверждение пароля и пароль не совпадают.");
+    }
+
+    if (!email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+      return setMessage("Неверный email.");
+    }
+
+    e.preventDefault();
+    postAuth({
+      url: "registration",
+      email,
+      password,
+      setMessage,
+    });
   };
 
   return (
     <div>
       <h1>Регистрация</h1>
-      <label className={classes.error} hidden={!message}>
+      <p
+        hidden={!message || message === "Пожалуйста, заполните данное поле"}
+        className={classes.error}
+      >
         {message}
-      </label>
+      </p>
       <br />
       <TextField
         name="email"
         className={classes.input}
         required
-        id="standard-required"
         label="Email"
         onChange={onInputChange}
+        helperText={!email ? message : ""}
+        error={!!message && !email}
       />
       <br />
       <TextField
         name="password"
         className={classes.input}
-        id="standard-password-input"
         label="Password"
         type="password"
         autoComplete="current-password"
         onChange={onInputChange}
+        helperText={!password ? message : ""}
+        error={!!message && !password}
       />
       <br />
       <TextField
         name="passwrod_confirmation"
         className={classes.input}
-        id="standard-password-input"
         label="Password confirmation"
         type="password"
         autoComplete="current-password"
         onChange={onInputChange}
+        helperText={!passwrod_confirmation ? message : ""}
+        error={!!message && !passwrod_confirmation}
       />
       <br />
       <div className={classes.button}>

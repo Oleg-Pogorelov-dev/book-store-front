@@ -16,7 +16,6 @@ import {
   REQUESTED_SEARCH_BOOKS,
   REQUESTED_NOTIFICATION_TRUE,
   REQUESTED_NOTIFICATION_FALSE,
-  SAVE_TOKEN,
   REQUESTED_REFRESH_TOKEN,
   FETCHED_CREATE_ORDER,
   UPDATE_AVATAR,
@@ -29,14 +28,15 @@ import {
   REQUESTED_AUTHOR_SUCCEEDED,
   UPDATE_BOOK,
   DELETE_BOOK,
+  REQUESTED_MY_PROFILE_ERROR,
 } from "./actions";
 
 export const postAuth = (data) => {
   return { type: FETCHED_AUTH, data };
 };
 
-export const getMyProfile = (token) => {
-  return { type: FETCHED_MY_PROFILE, token };
+export const getMyProfile = () => {
+  return { type: FETCHED_MY_PROFILE };
 };
 
 export const requestMyProfile = () => {
@@ -111,10 +111,6 @@ export const setNotificationFalse = () => {
   return { type: REQUESTED_NOTIFICATION_FALSE };
 };
 
-export const saveToken = () => {
-  return { type: SAVE_TOKEN };
-};
-
 export const getRefreshToken = () => {
   return { type: REQUESTED_REFRESH_TOKEN };
 };
@@ -149,4 +145,8 @@ export const updateBook = (data) => {
 
 export const deleteBook = (data) => {
   return { type: DELETE_BOOK, data };
+};
+
+export const requestMyProfileError = (data) => {
+  return { type: REQUESTED_MY_PROFILE_ERROR, data };
 };

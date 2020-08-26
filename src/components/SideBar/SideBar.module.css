@@ -31,3 +31,13 @@
   flex-direction: column;
   justify-content: space-around;
 }
+
+.current_sort_up:after {
+  color: blue;
+  content: "\2191";
+}
+
+.current_sort_down:after {
+  color: blue;
+  content: "\2193";
+}

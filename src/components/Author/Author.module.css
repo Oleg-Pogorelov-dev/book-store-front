@@ -5,12 +5,15 @@
 
 .img_wrapper {
   flex-grow: 1;
+  padding: 50px;
 }
 
 .info {
   display: flex;
   flex-direction: column;
   flex-grow: 3;
+  padding: 50px;
+  text-align: left;
 }
 
 .author_name {
@@ -19,4 +22,9 @@
 
 .info_discription {
   align-self: flex-start;
+}
+
+.img {
+  max-height: 500px;
+  max-width: 200px;
 }

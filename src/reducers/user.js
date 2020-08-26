@@ -1,6 +1,7 @@
 import {
   REQUESTED_MY_PROFILE,
   REQUESTED_MY_PROFILE_SUCCEEDED,
+  REQUESTED_MY_PROFILE_ERROR,
 } from "../actions/actions";
 
 export function reducerMyProfile(
@@ -13,6 +14,7 @@ export function reducerMyProfile(
     avatar: "",
     loading: false,
     orders: [],
+    error: "",
   },
   action
 ) {
@@ -27,6 +29,7 @@ export function reducerMyProfile(
         avatar: "",
         loading: true,
         orders: [],
+        error: "",
       };
     case REQUESTED_MY_PROFILE_SUCCEEDED:
       return {
@@ -38,6 +41,19 @@ export function reducerMyProfile(
         avatar: action.data.user.avatar,
         loading: false,
         orders: action.data.orders,
+        error: "",
+      };
+    case REQUESTED_MY_PROFILE_ERROR:
+      return {
+        email: "",
+        id: null,
+        first_name: "",
+        last_name: "",
+        phone: null,
+        avatar: "",
+        loading: false,
+        orders: [],
+        error: action.data.message,
       };
     default:
       return state;

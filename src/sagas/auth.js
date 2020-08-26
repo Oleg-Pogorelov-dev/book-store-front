@@ -4,6 +4,7 @@ import axiosInstance from "../api/axiosInstance";
 import {
   requestMyProfile,
   requestMyProfileSuccess,
+  requestMyProfileError,
 } from "../actions/actionCreators";
 
 export function* fetchAuthAsync(data) {
@@ -17,11 +18,10 @@ export function* fetchAuthAsync(data) {
 
     localStorage.setItem("token", tokens.data.token);
     localStorage.setItem("refresh-token", tokens.data.refresh_token);
+    yield call(() => fetchMyProfileAsync(), fetchBooksAsync());
   } catch (e) {
-    console.log(e);
+    data.data.setMessage(e.response.data.message);
   }
-
-  yield call(() => fetchMyProfileAsync(), fetchBooksAsync());
 }
 
 export function* fetchMyProfileAsync() {
@@ -31,8 +31,8 @@ export function* fetchMyProfileAsync() {
       return axiosInstance("profile");
     });
     yield put(requestMyProfileSuccess(data.data));
-  } catch (err) {
-    console.log(err.response);
+  } catch (e) {
+    yield put(requestMyProfileError(e.response.data));
   }
 }
 

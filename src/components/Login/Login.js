@@ -21,6 +21,11 @@ function Login(props) {
 
   const onBtnClick = (e) => {
     e.preventDefault();
+
+    if (!password || !email) {
+      return setMessage("Пожалуйста, заполните данное поле");
+    }
+
     postAuth({
       url: "login",
       email,
@@ -32,27 +37,32 @@ function Login(props) {
   return (
     <div>
       <h1>Вход</h1>
-      <label className={classes.error} hidden={!message}>
+      <p
+        hidden={!message || message === "Пожалуйста, заполните данное поле"}
+        className={classes.error}
+      >
         {message}
-      </label>
+      </p>
       <br />
       <TextField
         name="email"
         className={classes.input}
         required
-        id="standard-required"
         label="Email"
         onChange={onInputChange}
+        helperText={!email ? message : ""}
+        error={!!message && !email}
       />
       <br />
       <TextField
         name="password"
         className={classes.input}
-        id="standard-password-input"
         label="Password"
         type="password"
         autoComplete="current-password"
         onChange={onInputChange}
+        helperText={!password ? message : ""}
+        error={!!message && !password}
       />
       <br />
       <div className={classes.button}>
