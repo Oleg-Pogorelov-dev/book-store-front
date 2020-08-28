@@ -28,6 +28,7 @@ function UserUpdate(props) {
       phone,
     };
     updateInfo(formData);
+    setModalOpen(false);
   };
 
   const onBtnCancel = (e) => {

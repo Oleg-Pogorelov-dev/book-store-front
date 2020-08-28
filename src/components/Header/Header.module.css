@@ -1,5 +1,5 @@
 .header {
-  padding-bottom: 100px;
+  /* padding-bottom: 100px; */
 }
 
 .tabs_log {
@@ -9,6 +9,7 @@
 }
 
 .link {
+  margin-right: 30px;
   color: white;
   text-decoration: none;
 }

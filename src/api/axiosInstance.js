@@ -8,11 +8,11 @@ const axiosInstance = axios.create({
 
 export let accessToken;
 
-export const setAccessToken = (token) => (accessToken = token);
+export const setAccessToken = () =>
+  (accessToken = store.getState().token.token);
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    accessToken = localStorage.token;
     if (!accessToken) return config;
 
     config.headers["Authorization"] = `Bearer ${accessToken}`;
@@ -29,9 +29,10 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.log(error.response);
     if (
       error.response.data.message === "Token expired" &&
-      error.response.statusText === "Unauthorized"
+      error.response.status === 401
     ) {
       store.dispatch(getRefreshToken());
     }

@@ -13,6 +13,7 @@ function SideBar(props) {
     searchValue,
     setSearchValue,
     books,
+    booksLimit,
   } = props;
 
   const [genresSelected, setGenresSelected] = useState([]);
@@ -45,15 +46,18 @@ function SideBar(props) {
 
   useEffect(() => {
     getBooks({
+      booksLimit: booksLimit,
       offset: offset,
       genre: genresSelected,
       title: searchValue,
       order_item: sort.order_item,
       order_type: sort.order_type,
     });
-  }, [offset, searchValue, genresSelected, sort]);
+  }, [offset, searchValue, genresSelected, sort, booksLimit]);
 
   const onSortClick = (e) => {
+    setOffset(0);
+    setCurrentPage(1);
     const name_sort = e.target.attributes[1].nodeValue;
 
     if (name_sort === sort.order_item) {
@@ -132,14 +136,6 @@ function SideBar(props) {
           Дате
         </div>
       </div>
-      <Search
-        setSearchValue={setSearchValue}
-        setOffset={setOffset}
-        setCurrentPage={setCurrentPage}
-        searchValue={searchValue}
-        books={books}
-        getBooks={getBooks}
-      />
       <div className={classes.genre}>
         <div>Жанры</div>
         <FormControlLabel

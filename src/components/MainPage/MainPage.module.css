@@ -1,12 +1,49 @@
 .mainPage {
+  margin-top: 100px;
   height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.book_list {
+.filter_menu {
+  display: flex;
+  align-items: center;
   margin: 0 auto;
+  background-color: rgb(245, 244, 244);
+  border: 1px solid rgba(128, 128, 128, 0.158);
+  height: 40px;
+  width: 100%;
+  position: absolute;
+  top: 60px;
+  z-index: 5;
+}
+
+.filters_list {
+  display: flex;
+  margin-left: 5vw;
+}
+
+.filter_item {
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.genre {
+  cursor: pointer;
+}
+
+.genre_list {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  background-color: white;
+  border: 1px rgba(128, 128, 128, 0.219) solid;
+  border-radius: 0 0 10px 10px;
+}
+
+.book_list {
+  margin: 50px auto;
   max-width: 800px;
   display: flex;
   flex-wrap: wrap;

@@ -1,10 +1,11 @@
 import { call, put } from "redux-saga/effects";
 import { fetchBooksAsync } from "./books";
-import axiosInstance from "../api/axiosInstance";
+import axiosInstance, { setAccessToken } from "../api/axiosInstance";
 import {
   requestMyProfile,
   requestMyProfileSuccess,
   requestMyProfileError,
+  requestToken,
 } from "../actions/actionCreators";
 
 export function* fetchAuthAsync(data) {
@@ -16,8 +17,9 @@ export function* fetchAuthAsync(data) {
       });
     });
 
-    localStorage.setItem("token", tokens.data.token);
+    requestToken(tokens.data.token);
     localStorage.setItem("refresh-token", tokens.data.refresh_token);
+    yield put(requestToken());
     yield call(() => fetchMyProfileAsync(), fetchBooksAsync());
   } catch (e) {
     data.data.setMessage(e.response.data.message);
@@ -25,6 +27,8 @@ export function* fetchAuthAsync(data) {
 }
 
 export function* fetchMyProfileAsync() {
+  yield put(requestToken());
+  setAccessToken();
   yield put(requestMyProfile());
   try {
     const data = yield call(async () => {

@@ -29,6 +29,7 @@ import {
   UPDATE_BOOK,
   DELETE_BOOK,
   REQUESTED_MY_PROFILE_ERROR,
+  REQUESTED_TOKEN,
 } from "./actions";
 
 export const postAuth = (data) => {
@@ -149,4 +150,8 @@ export const deleteBook = (data) => {
 
 export const requestMyProfileError = (data) => {
   return { type: REQUESTED_MY_PROFILE_ERROR, data };
+};
+
+export const requestToken = () => {
+  return { type: REQUESTED_TOKEN };
 };

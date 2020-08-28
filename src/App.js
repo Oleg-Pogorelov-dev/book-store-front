@@ -10,18 +10,19 @@ import Profile from "./components/Profile/Profile";
 import Header from "./components/Header/Header";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
-import { getMyProfile } from "./actions/actionCreators";
+import { getMyProfile, requestToken } from "./actions/actionCreators";
 import Book from "./components/Book/Book";
 import Basket from "./components/Basket/Basket";
 import Author from "./components/Author/Author";
-import { setAccessToken, accessToken } from "./api/axiosInstance";
+import { accessToken, setAccessToken } from "./api/axiosInstance";
 
 function App(props) {
-  const { getMyProfile, user } = props;
+  const { getMyProfile, user, requestToken, token } = props;
 
   useEffect(() => {
-    if (localStorage.token && localStorage.token !== accessToken) {
-      setAccessToken(localStorage.token);
+    if (!token || accessToken !== token) {
+      requestToken();
+      setAccessToken(token);
     }
 
     getMyProfile();
@@ -73,6 +74,7 @@ const connectFunction = connect(
   }),
   {
     getMyProfile,
+    requestToken,
   }
 );
 

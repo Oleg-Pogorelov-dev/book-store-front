@@ -6,6 +6,7 @@ import { Button, Typography, Toolbar } from "@material-ui/core";
 import classes from "./Header.module.css";
 import { connect } from "react-redux";
 import { setNotificationTrue } from "../../actions/actionCreators";
+import Search from "../Search/Search";
 
 function Header(props) {
   const { notification, user, setNotificationTrue, load } = props;
@@ -35,6 +36,7 @@ function Header(props) {
                 Book store
               </Link>
             </Typography>
+            <Search />
             {!user ? (
               <div className={classes.tabs_log}>
                 <Link className={classes.basket} to="/basket">

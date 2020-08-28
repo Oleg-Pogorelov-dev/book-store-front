@@ -46,6 +46,7 @@ function UpdateBookModal(props) {
       id: book.id,
     };
     updateBook(formData);
+    setOpenModal(false);
   };
 
   const onBtnCancel = (e) => {

@@ -6,6 +6,7 @@ import { reducerAuthor } from "./author";
 import { reducerSearchedBooks } from "./searched_books";
 import { reducerNotification } from "./notification";
 import { reducerSearchedAuthors } from "./searched_authors";
+import { reducerToken } from "./token";
 
 export const rootReducer = combineReducers({
   user: reducerMyProfile,
@@ -15,4 +16,5 @@ export const rootReducer = combineReducers({
   book: reducerBook,
   author: reducerAuthor,
   notification: reducerNotification,
+  token: reducerToken,
 });

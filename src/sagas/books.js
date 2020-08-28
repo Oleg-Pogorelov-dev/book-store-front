@@ -14,6 +14,7 @@ export function* fetchBooksAsync(options) {
   const data = yield call(() => {
     return axiosInstance("books", {
       params: {
+        booksLimit: options.data.booksLimit,
         offset: options.data.offset,
         genre: options.data.genre,
         title: options.data.title,

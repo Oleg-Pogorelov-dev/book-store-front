@@ -62,6 +62,17 @@ function Search(props) {
     if (debouncedSearchTerm) {
       getSearchBooks({ search: searchText });
     }
+
+    if (searchValue) {
+      getBooks({
+        booksLimit: booksLimit,
+        offset: 0,
+        genre: "",
+        title: searchValue,
+        order_item: sort.order_item,
+        order_type: sort.order_type,
+      });
+    }
   }, [getSearchBooks, searchText, debouncedSearchTerm]);
 
   return (
@@ -86,7 +97,7 @@ function Search(props) {
           return option.title;
         }}
         renderOption={(option) => option.title}
-        style={{ maxWidth: 300 }}
+        style={{ width: 300 }}
         freeSolo
         renderInput={(params) => (
           <TextField {...params} label="Search books" variant="outlined" />

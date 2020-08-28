@@ -68,6 +68,7 @@ function AddBook(props) {
     }
 
     addBook({ formData, setMessage });
+    setOpenBookModal(false);
   };
 
   const onBtnCancel = (e) => {

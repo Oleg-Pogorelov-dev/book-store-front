@@ -30,6 +30,7 @@ function AddAuthor(props) {
     }
 
     addAuthor({ formData, setMessage });
+    setOpenAuthorModal(false);
   };
 
   const onBtnCancel = (e) => {
