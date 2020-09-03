@@ -1,42 +1,44 @@
 import { call, put } from "redux-saga/effects";
-import axiosInstance from "../api/axiosInstance";
+import { post_axios, get_axios } from "../api/axiosInstance";
 import {
   requestSearchAuthors,
   requestSearchAuthorsSuccess,
   requestAuthor,
   requestAuthorSuccess,
-} from "../actions/actionCreators";
+  setMessage,
+  requestStatusCode,
+} from "../store/actions/actionCreators";
 
-export function* fetchAddAuthorAsync(data) {
+export function* fetchAddAuthorAsync(options) {
   try {
-    yield call(() => {
-      return axiosInstance.post("authors/add_author", data.data.formData);
-    });
+    const data = yield call(() =>
+      post_axios("authors/add_author", options.data.formData)
+    );
+    yield put(setMessage(data.data.message));
   } catch (e) {
-    data.data.setMessage(e.response.data.message);
+    options.data.setMessage(e.response.data.message);
   }
 }
 
 export function* fetchSearchAuthorsAsync(options) {
   yield put(requestSearchAuthors());
-  const data = yield call(() => {
-    return axiosInstance("authors/search_authors", {
-      params: {
-        search: options.data.search,
-      },
-    });
-  });
+  const data = yield call(() =>
+    get_axios("authors/search_authors", { search: options.data.search })
+  );
   yield put(requestSearchAuthorsSuccess(data.data));
 }
 
 export function* fetchAuthorAsync(options) {
-  yield put(requestAuthor());
-  const data = yield call(() => {
-    return axiosInstance("authors/author", {
-      params: {
-        id: options.data,
-      },
-    });
-  });
-  yield put(requestAuthorSuccess(data.data));
+  try {
+    yield put(requestAuthor());
+    const data = yield call(() =>
+      get_axios("authors/author", { id: options.data })
+    );
+    yield put(requestAuthorSuccess(data.data));
+  } catch (e) {
+    if (e.response.status === 404) {
+      yield put(requestStatusCode(e.response.status));
+    }
+    console.log(e.response.data.message);
+  }
 }

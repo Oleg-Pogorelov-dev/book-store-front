@@ -1,39 +1,53 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { getBooks } from "../../actions/actionCreators";
-import classes from "./MainPage.module.css";
 import { Link, withRouter } from "react-router-dom";
-import { Modal, Button } from "@material-ui/core";
+import {
+  Modal,
+  Button,
+  Backdrop,
+  CircularProgress,
+  makeStyles,
+} from "@material-ui/core";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import AddBookModal from "../AddBookModal/AddBookModal";
-import SideBar from "../SideBar/SideBar";
-import AddAuthorModal from "../AddAuthorModal/AddAuthorModal";
-import { makeStyles } from "@material-ui/styles";
+import {
+  getBooks,
+  postSearchValue,
+  setMessage,
+} from "../../store/actions/actionCreators";
+import classes from "./MainPage.module.css";
+import AddBookModal from "../Modals/AddBookModal/AddBookModal";
+import AddAuthorModal from "../Modals/AddAuthorModal/AddAuthorModal";
+import DropdownPanel from "../DropdownPanel/DropdownPanel";
 
 function MainPage(props) {
-  const { books, getBooks, user } = props;
+  console.log(props);
+  const { books, getBooks, user, search_value, message, setMessage } = props;
 
   const [currentBooks, setCurrentBooks] = useState([]);
   const [offset, setOffset] = useState(0);
   const [openBookModal, setOpenBookModal] = useState(false);
   const [openAuthorModal, setOpenAuthorModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchValue, setSearchValue] = useState(null);
   const [numImg, setNumImg] = useState(0);
   const [currentBookClass, setCurrentBookClass] = useState("");
-  const [openGenres, setOpenGenres] = useState(false);
-  const [booksLimit, setBooksLimit] = useState(12);
   const [genresSelected, setGenresSelected] = useState("");
   const [sort, setSort] = useState({
     order_item: "id",
     order_type: "DESC",
   });
+  const [booksLimit, setBooksLimit] = useState(12);
 
   const countBooks = books.count;
 
-  const useStyles = makeStyles(() => ({
+  const useStyles = makeStyles((theme) => ({
     add_button: {
       margin: "10px",
+    },
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: "#fff",
     },
   }));
 
@@ -72,174 +86,70 @@ function MainPage(props) {
     setCurrentBookClass(book_class);
   };
 
-  const onClickGenres = () => {
-    if (!openGenres) {
-      setOpenGenres(true);
-    }
-
-    if (openGenres) {
-      setOpenGenres(false);
-    }
-  };
-
   const onLimitChange = (e) => {
-    setBooksLimit(e.currentTarget.value);
+    e.preventDefault();
+    setOffset(0);
+    setCurrentPage(1);
+    const input = document.querySelector(`.${classes.count_books_for_page}`);
+    setBooksLimit(input.value);
   };
+
+  const notify = () => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setMessage("");
+  };
+  console.log("MESSAGE", message);
 
   useEffect(() => {
     getBooks({
       booksLimit: booksLimit,
       offset: offset,
       genre: genresSelected,
-      title: searchValue,
+      title: search_value,
       order_item: sort.order_item,
       order_type: sort.order_type,
     });
-  }, [offset, searchValue, genresSelected, sort, booksLimit]);
-
-  const onGenreClick = (e) => {
-    console.log(e.target.attributes[1]);
-    setGenresSelected(e.target.attributes[1].nodeValue);
-  };
-
-  const onSortClick = (e) => {
-    setOffset(0);
-    setCurrentPage(1);
-    const name_sort = e.target.attributes[1].nodeValue;
-
-    if (name_sort === sort.order_item) {
-      setSort({
-        order_type: sort.order_type === "ASC" ? "DESC" : "ASC",
-        order_item: name_sort,
-      });
-    }
-
-    if (name_sort !== sort.order_item) {
-      setSort({
-        order_type: "ASC",
-        order_item: name_sort,
-      });
-    }
-  };
+  }, [offset, search_value, genresSelected, sort, booksLimit]);
 
   const classesMUI = useStyles();
+
+  if (books.loading) {
+    return (
+      <Backdrop className={classesMUI.backdrop} open={books.loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
+
   return (
     <div className={classes.mainPage}>
-      {/* {books.loading ? <Loading /> : ""} */}
-      <div className={classes.filter_menu}>
-        <div className={classes.filters_list}>
-          <div className={classes.filter_item} onClick={onClickGenres}>
-            Жанры
-          </div>
-          <div>Сортировать по:</div>
-          <div
-            className={
-              sort.order_item === "price" && sort.order_type === "ASC"
-                ? classes.filter_item + " " + classes.current_sort_up
-                : sort.order_item === "price" && sort.order_type === "DESC"
-                ? classes.filter_item + " " + classes.current_sort_down
-                : classes.filter_item
-            }
-            name="price"
-            onClick={(e) => onSortClick(e)}
-          >
-            Цене
-          </div>
-          <div
-            className={
-              sort.order_item === "title" && sort.order_type === "ASC"
-                ? classes.filter_item + " " + classes.current_sort_up
-                : sort.order_item === "title" && sort.order_type === "DESC"
-                ? classes.filter_item + " " + classes.current_sort_down
-                : classes.filter_item
-            }
-            name="title"
-            onClick={(e) => onSortClick(e)}
-          >
-            Названию
-          </div>
-          <div
-            className={
-              sort.order_item === "genre" && sort.order_type === "ASC"
-                ? classes.filter_item + " " + classes.current_sort_up
-                : sort.order_item === "genre" && sort.order_type === "DESC"
-                ? classes.filter_item + " " + classes.current_sort_down
-                : classes.filter_item
-            }
-            name="genre"
-            onClick={(e) => onSortClick(e)}
-          >
-            Жанру
-          </div>
-          <div
-            className={
-              sort.order_item === "id" && sort.order_type === "ASC"
-                ? classes.filter_item + " " + classes.current_sort_up
-                : sort.order_item === "id" && sort.order_type === "DESC"
-                ? classes.filter_item + " " + classes.current_sort_down
-                : classes.filter_item
-            }
-            name="id"
-            onClick={(e) => onSortClick(e)}
-          >
-            Дате
-          </div>
-        </div>
-        <div className={classes.genre_list} hidden={!openGenres}>
-          <div
-            className={classes.genre}
-            name=""
-            onClick={(e) => onGenreClick(e)}
-          >
-            Все
-          </div>
-          <div
-            className={classes.genre}
-            name="comedy"
-            onClick={(e) => onGenreClick(e)}
-          >
-            Юмор
-          </div>
-          <div
-            className={classes.genre}
-            name="esoteric"
-            onClick={(e) => onGenreClick(e)}
-          >
-            Эзотерика
-          </div>
-          <div
-            className={classes.genre}
-            name="detective"
-            onClick={(e) => onGenreClick(e)}
-          >
-            Детектив
-          </div>
-          <div
-            className={classes.genre}
-            name="fantasy"
-            onClick={(e) => onGenreClick(e)}
-          >
-            Фэнтези
-          </div>
-          <div
-            className={classes.genre}
-            name="novel"
-            onClick={(e) => onGenreClick(e)}
-          >
-            Роман
-          </div>
-        </div>
-      </div>
-      {/* <SideBar
-        booksLimit={booksLimit}
-        offset={offset}
-        searchValue={searchValue}
-        setOffset={setOffset}
+      {message && books.count ? notify() : ""}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <DropdownPanel
+        setGenresSelected={setGenresSelected}
+        sort={sort}
+        setSort={setSort}
         setCurrentPage={setCurrentPage}
-        setSearchValue={setSearchValue}
-        getBooks={getBooks}
-        books={books.books}
-      /> */}
+        setOffset={setOffset}
+      />
       <div className={classes.book_list}>
         {currentBooks.map((book, index) => {
           const book_class = `book_${book.id}`;
@@ -336,19 +246,28 @@ function MainPage(props) {
             >
               В начало
             </div>
-            {pageNumbers.map((number, index) => (
-              <div
-                key={index}
-                onClick={addActiveClass(number)}
-                className={
-                  number === currentPage
-                    ? `${classes.pagination_item} ${classes.active_item}`
-                    : classes.pagination_item
-                }
-              >
-                {number}
-              </div>
-            ))}
+            {pageNumbers.map((number, index) => {
+              if (
+                number === currentPage ||
+                number === currentPage + 1 ||
+                number === currentPage - 1
+              ) {
+                return (
+                  <div
+                    key={index}
+                    onClick={addActiveClass(number)}
+                    className={
+                      number === currentPage
+                        ? `${classes.pagination_item} ${classes.active_item}`
+                        : classes.pagination_item
+                    }
+                  >
+                    {number}
+                  </div>
+                );
+              }
+              return "";
+            })}
             <div hidden={pageNumbers.length <= currentPage}>
               <div
                 className={classes.customLink}
@@ -362,11 +281,19 @@ function MainPage(props) {
       )}
       <div>
         Количество книг на странице:
-        <input
-          type="number"
-          onChange={onLimitChange}
-          defaultValue={booksLimit}
-        />
+        <form>
+          <input
+            className={classes.count_books_for_page}
+            type="number"
+            defaultValue={booksLimit}
+          />
+          <button
+            className={classes.button_count_books}
+            onClick={onLimitChange}
+          >
+            &bull;
+          </button>
+        </form>
       </div>
       <Modal
         open={openBookModal}
@@ -392,12 +319,16 @@ function MainPage(props) {
   );
 }
 
-const mapStateToProps = (store) => {
-  return { books: store.books };
-};
+const mapStateToProps = (store) => ({
+  books: store.books,
+  search_value: store.search_value,
+  message: store.message,
+});
 
 const mapDispatchToProps = {
   getBooks,
+  postSearchValue,
+  setMessage,
 };
 
 export default connect(

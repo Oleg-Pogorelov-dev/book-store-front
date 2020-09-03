@@ -1,37 +1,32 @@
 import { call, put } from "redux-saga/effects";
 import { fetchBooksAsync } from "./books";
-import axiosInstance, { setAccessToken } from "../api/axiosInstance";
+import axiosInstance, { put_axios, post_axios } from "../api/axiosInstance";
 import {
   requestMyProfile,
   requestMyProfileSuccess,
   requestMyProfileError,
   requestToken,
-} from "../actions/actionCreators";
+  setAccessToken,
+} from "../store/actions/actionCreators";
 
 export function* fetchAuthAsync(data) {
+  const { url, email, password, setMessage } = data.data;
   try {
-    const tokens = yield call(() => {
-      return axiosInstance.post(data.data.url, {
-        email: data.data.email,
-        password: data.data.password,
-      });
-    });
-
-    requestToken(tokens.data.token);
+    const tokens = yield call(() => post_axios(url, { email, password }));
+    yield put(setAccessToken(tokens.data.token));
     localStorage.setItem("refresh-token", tokens.data.refresh_token);
+    localStorage.setItem("token", tokens.data.token);
     yield put(requestToken());
     yield call(() => fetchMyProfileAsync(), fetchBooksAsync());
   } catch (e) {
-    data.data.setMessage(e.response.data.message);
+    setMessage(e.response.data.message);
   }
 }
 
 export function* fetchMyProfileAsync() {
-  yield put(requestToken());
-  setAccessToken();
   yield put(requestMyProfile());
   try {
-    const data = yield call(async () => {
+    const data = yield call(() => {
       return axiosInstance("profile");
     });
     yield put(requestMyProfileSuccess(data.data));
@@ -42,9 +37,7 @@ export function* fetchMyProfileAsync() {
 
 export function* fetchUpdateAvatar(options) {
   try {
-    yield call(async () => {
-      return axiosInstance.put("update_avatar", options.data);
-    });
+    yield call(put_axios("update_avatar", options.data));
   } catch (err) {
     console.log(err.response);
   }
@@ -53,9 +46,7 @@ export function* fetchUpdateAvatar(options) {
 
 export function* fetchUpdateInfo(options) {
   try {
-    yield call(async () => {
-      return axiosInstance.put("update_info", options.data);
-    });
+    yield call(put_axios("update_info", options.data));
   } catch (err) {
     console.log(err.response);
   }

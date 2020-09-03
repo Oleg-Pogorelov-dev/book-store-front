@@ -1,0 +1,37 @@
+.filter_menu {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  background-color: rgb(245, 244, 244);
+  border: 1px solid rgba(128, 128, 128, 0.158);
+  height: 40px;
+  width: 100%;
+  position: absolute;
+  top: 60px;
+  z-index: 5;
+}
+
+.filters_list {
+  display: flex;
+  margin-left: 5vw;
+}
+
+.filter_item {
+  margin: 0 20px;
+  cursor: pointer;
+}
+
+.genre_list {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  background-color: white;
+  border: 1px rgba(128, 128, 128, 0.219) solid;
+  border-radius: 0 0 10px 10px;
+}
+
+.genre {
+  margin: 0 auto;
+  cursor: pointer;
+  width: 10%;
+}

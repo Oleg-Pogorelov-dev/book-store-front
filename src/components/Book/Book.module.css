@@ -1,3 +1,7 @@
+.main {
+  margin-top: 100px;
+}
+
 .book_info {
   display: flex;
   margin: 0 auto;
@@ -69,6 +73,7 @@
   justify-content: space-around;
   background-color: rgba(128, 128, 128, 0.144);
   max-height: 200px;
+  max-width: 400px;
   border: 2px solid blue;
   border-radius: 5px;
   flex-grow: 3;

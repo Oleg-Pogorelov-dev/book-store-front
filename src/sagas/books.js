@@ -6,31 +6,35 @@ import {
   requestBookSuccess,
   requestSearchBooks,
   requestSearchBooksSuccess,
-} from "../actions/actionCreators";
-import axiosInstance from "../api/axiosInstance";
+  setMessage,
+  requestStatusCode,
+} from "../store/actions/actionCreators";
+import {
+  delete_axios,
+  put_axios,
+  post_axios,
+  get_axios,
+} from "../api/axiosInstance";
 
 export function* fetchBooksAsync(options) {
-  yield put(requestBooks());
-  const data = yield call(() => {
-    return axiosInstance("books", {
-      params: {
-        booksLimit: options.data.booksLimit,
-        offset: options.data.offset,
-        genre: options.data.genre,
-        title: options.data.title,
-        order_item: options.data.order_item,
-        order_type: options.data.order_type,
-      },
-    });
-  });
-  yield put(requestBooksSuccess(data.data));
+  try {
+    yield put(requestBooks());
+    const data = yield call(() => get_axios("books", options.data));
+    yield put(requestBooksSuccess(data.data));
+  } catch (e) {
+    if (e.response.status === 404) {
+      yield put(requestStatusCode(e.response.status));
+    }
+    console.log(e.response.data.message);
+  }
 }
 
-export function* fetchAddBookAsync(data) {
+export function* fetchAddBookAsync(options) {
   try {
-    yield call(() => {
-      return axiosInstance.post("books/add_book", data.data.formData);
-    });
+    const data = yield call(() =>
+      post_axios("books/add_book", options.data.formData)
+    );
+    yield put(setMessage(data.data.message));
     yield fetchBooksAsync({
       data: {
         offset: 0,
@@ -39,40 +43,35 @@ export function* fetchAddBookAsync(data) {
       },
     });
   } catch (e) {
-    data.data.setMessage(e.response.data.message);
+    options.data.setError(e.response.data.message);
   }
 }
 
 export function* fetchBookAsync(options) {
-  const id = options.data || options;
-  yield put(requestBook());
-  const data = yield call(() => {
-    return axiosInstance("books/book", {
-      params: {
-        id,
-      },
-    });
-  });
-  yield put(requestBookSuccess(data.data));
+  try {
+    const id = options.data || options;
+    yield put(requestBook());
+    const data = yield call(() => get_axios("books/book", { id }));
+    yield put(requestBookSuccess(data.data));
+  } catch (e) {
+    if (e.response.status === 404) {
+      yield put(requestStatusCode(e.response.status));
+    }
+    console.log(e.response.data.message);
+  }
 }
 
 export function* fetchSearchBooksAsync(options) {
   yield put(requestSearchBooks());
-  const data = yield call(() => {
-    return axiosInstance("books/search_book", {
-      params: {
-        search: options.data.search,
-      },
-    });
-  });
+  const data = yield call(() =>
+    get_axios("books/search_book", { search: options.data.search })
+  );
   yield put(requestSearchBooksSuccess(data.data));
 }
 
 export function* fetchUpdateBook(options) {
   try {
-    yield call(async () => {
-      return axiosInstance.put("books/update_book", options.data);
-    });
+    yield call(() => put_axios("books/update_book", options.data));
   } catch (err) {
     console.log(err.response);
   }
@@ -81,13 +80,10 @@ export function* fetchUpdateBook(options) {
 
 export function* fetchDeleteBook(options) {
   try {
-    yield call(async () => {
-      return axiosInstance.delete("books/delete_book", {
-        params: {
-          id: options.data,
-        },
-      });
-    });
+    const data = yield call(() =>
+      delete_axios("books/delete_book", { id: options.data })
+    );
+    yield put(setMessage(data.data.message));
   } catch (err) {
     console.log(err.response);
   }

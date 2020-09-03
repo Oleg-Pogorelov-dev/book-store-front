@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { getAuthor } from "../../actions/actionCreators";
+
+import { getAuthor } from "../../store/actions/actionCreators";
 import classes from "./Author.module.css";
 
 function Author(props) {
@@ -29,9 +30,7 @@ function Author(props) {
   );
 }
 
-const mapStateToProps = (store) => {
-  return { author: store.author };
-};
+const mapStateToProps = (store) => ({ author: store.author });
 
 const mapDispatchToProps = {
   getAuthor,

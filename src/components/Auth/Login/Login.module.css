@@ -1,0 +1,17 @@
+.main {
+  margin-top: 100px;
+}
+
+.input {
+  width: 60%;
+}
+
+.button {
+  margin: 20px;
+}
+
+.error {
+  color: #e90c0cf5;
+  background-color: #ee170825;
+  border-radius: 5px;
+}

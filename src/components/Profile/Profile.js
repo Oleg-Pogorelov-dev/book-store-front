@@ -7,12 +7,16 @@ import {
   Button,
   Modal,
 } from "@material-ui/core";
-import UserUpdate from "../UserUpdate/UserUpdate";
-import { updateAvatar } from "../../actions/actionCreators";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
+import UserUpdate from "../Modals/UserUpdate/UserUpdate";
+import { updateAvatar } from "../../store/actions/actionCreators";
+
 const useStyles = makeStyles({
+  main: {
+    marginTop: "100px",
+  },
   card_order: {
     margin: "20px auto",
     color: "rgba(48, 48, 48, 0.7)",
@@ -102,7 +106,7 @@ function Profile(props) {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.main}>
       <h1>Мой профиль</h1>
       <label htmlFor="upload-photo">
         <img

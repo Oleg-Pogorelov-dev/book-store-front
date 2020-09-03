@@ -1,22 +1,24 @@
 import { call, put } from "redux-saga/effects";
-import { requestMyProfileError } from "../actions/actionCreators";
-import axiosInstance from "../api/axiosInstance";
+import {
+  requestMyProfileError,
+  setAccessToken,
+} from "../store/actions/actionCreators";
+import { refreshToken, setRefreshToken } from "../api/axiosInstance";
 import { fetchMyProfileAsync } from "./auth";
 
 export default function* fetchRefreshToken() {
   try {
-    const data = yield call(() => {
-      return axiosInstance.post("refresh_token", {
-        refresh_token: localStorage.getItem("refresh-token"),
-      });
-    });
+    const data = yield call(refreshToken);
 
     if (data.status === 201) {
-      localStorage.setItem("token", data.data.token);
+      yield put(setAccessToken(data.data.token));
+      setRefreshToken(data.data.refresh_token);
       localStorage.setItem("refresh-token", data.data.refresh_token);
-      yield call(() => fetchMyProfileAsync());
+      localStorage.setItem("token", data.data.token);
+      yield call(fetchMyProfileAsync);
     }
   } catch (e) {
+    console.log(e.response);
     yield put(requestMyProfileError(e.response.data));
   }
 }

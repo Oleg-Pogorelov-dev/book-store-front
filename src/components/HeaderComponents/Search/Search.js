@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
-import { TextField, FormControl, makeStyles } from "@material-ui/core";
+import { TextField, FormControl } from "@material-ui/core";
 import { connect } from "react-redux";
 
-import { getSearchAuthors } from "../../store/actions/actionCreators";
-import useDebounce from "../../helpers/debounce";
+import classes from "./Search.module.css";
+import {
+  getSearchBooks,
+  postSearchValue,
+} from "../../../store/actions/actionCreators";
+import useDebounce from "../../../helpers/debounce";
 
-function SearchAuthors(props) {
-  const {
-    getSearchAuthors,
-    searched_authors,
-    searchValue,
-    setSearchValue,
-  } = props;
+function Search(props) {
+  const { getSearchBooks, searched_books, postSearchValue } = props;
 
   const [searchText, setSearchText] = useState("");
+  const [searchValue, setSearchValue] = useState(null);
 
-  const debouncedSearchTerm = useDebounce(searchText, 500);
+  const debouncedSearchTerm = useDebounce(searchText, 1000);
   const filter = createFilterOptions();
 
   const setOnChange = (event, newValue) => {
@@ -29,7 +30,7 @@ function SearchAuthors(props) {
     } else if (!newValue) {
       setSearchValue("");
     } else {
-      setSearchValue(newValue.name);
+      setSearchValue(newValue.title);
     }
   };
 
@@ -47,23 +48,29 @@ function SearchAuthors(props) {
     return filtered;
   };
 
-  const useStyles = makeStyles(() => ({
-    search: {
-      width: "100%",
-    },
-  }));
-
-  const classesMUI = useStyles();
-
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      getSearchAuthors({ search: searchText });
+    if (searchValue) {
+      typeof searchValue === "string"
+        ? postSearchValue(searchValue)
+        : postSearchValue(searchValue.search_value);
     }
-  }, [getSearchAuthors, searchText, debouncedSearchTerm]);
+
+    if (debouncedSearchTerm) {
+      getSearchBooks({ search: searchText });
+    }
+  }, [
+    getSearchBooks,
+    searchText,
+    debouncedSearchTerm,
+    postSearchValue,
+    searchValue,
+  ]);
 
   return (
-    <FormControl className={classesMUI.search}>
+    <FormControl>
+      {searchValue ? <Redirect to="/" /> : null}
       <Autocomplete
+        className={classes.search}
         size="small"
         value={searchValue}
         onChange={(event, newValue) => setOnChange(event, newValue)}
@@ -71,7 +78,7 @@ function SearchAuthors(props) {
         selectOnFocus
         clearOnBlur
         handleHomeEndKeys
-        options={searched_authors.searched_authors}
+        options={searched_books.searched_books}
         getOptionLabel={(option) => {
           if (typeof option === "string") {
             return option;
@@ -79,12 +86,17 @@ function SearchAuthors(props) {
           if (option.inputValue) {
             return option.inputValue;
           }
-          return option.name;
+          return option.title;
         }}
-        renderOption={(option) => option.name}
+        renderOption={(option) => option.title}
+        style={{ width: 300 }}
         freeSolo
         renderInput={(params) => (
-          <TextField {...params} label="Search authors" variant="outlined" />
+          <TextField
+            {...params}
+            placeholder="Search books"
+            variant="outlined"
+          />
         )}
       />
     </FormControl>
@@ -92,11 +104,12 @@ function SearchAuthors(props) {
 }
 
 const mapStateToProps = (store) => ({
-  searched_authors: store.searched_authors,
+  searched_books: store.searched_books,
 });
 
 const mapDispatchToProps = {
-  getSearchAuthors,
+  getSearchBooks,
+  postSearchValue,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchAuthors);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

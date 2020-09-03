@@ -2,20 +2,43 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link, Redirect } from "react-router-dom";
 import {
+  Button,
+  Modal,
+  Backdrop,
+  CircularProgress,
+  makeStyles,
+} from "@material-ui/core";
+
+import {
   getBook,
   setNotificationTrue,
   deleteBook,
-} from "../../actions/actionCreators";
+  setMessage,
+} from "../../store/actions/actionCreators";
 import classes from "./Book.module.css";
-import { Button, Modal } from "@material-ui/core";
-import UpdateBookModal from "../UpdateBookModal/UpdateBookModal";
-import DeleteBookModal from "../DeleteBookModal/DeleteBookModal";
+import UpdateBookModal from "../Modals/UpdateBookModal/UpdateBookModal";
+import DeleteBookModal from "../Modals/DeleteBookModal/DeleteBookModal";
+import { ToastContainer, toast } from "react-toastify";
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
 
 function Book(props) {
-  const { book, setNotificationTrue, getBook, user } = props;
+  const {
+    book,
+    setNotificationTrue,
+    getBook,
+    user,
+    message,
+    setMessage,
+  } = props;
 
   const idBook = +props.match.params.book.split("_")[1];
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [num_img, setNumImg] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
@@ -34,8 +57,9 @@ function Book(props) {
       order.push(book);
       localStorage.setItem("basket", JSON.stringify(order));
       setNotificationTrue();
+      setMessage(`Книга ${book.title} добавлена в корзину`);
     } else {
-      setMessage("Данный товар уже находится в корзине");
+      setError("Данный товар уже находится в корзине");
     }
   };
 
@@ -60,11 +84,45 @@ function Book(props) {
     getBook(idBook);
   }, [getBook, idBook]);
 
+  const classesMUI = useStyles();
+
+  const notify = () => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setMessage("");
+  };
+
   if (redirect) {
-    return <Redirect to="/books" />;
+    return <Redirect to="/" />;
+  }
+  if (!book.title) {
+    return (
+      <Backdrop className={classesMUI.backdrop} open={book.loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
   }
   return (
-    <div>
+    <div className={classes.main}>
+      {message ? notify() : ""}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <h1>{book.title}</h1>
       <div className={classes.book_info}>
         <div className={classes.images}>
@@ -135,7 +193,7 @@ function Book(props) {
         </div>
         <div className={classes.order_block}>
           <div>Цена {book.price} руб.</div>
-          <p hidden={!message}>{message}</p>
+          <p hidden={!error}>{error}</p>
           <Button
             className={classes.order_button}
             onClick={onBtnClick}
@@ -175,14 +233,16 @@ function Book(props) {
   );
 }
 
-const mapStateToProps = (store) => {
-  return { book: store.book };
-};
+const mapStateToProps = (store) => ({
+  book: store.book,
+  message: store.message,
+});
 
 const mapDispatchToProps = {
   getBook,
   setNotificationTrue,
   deleteBook,
+  setMessage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Book));

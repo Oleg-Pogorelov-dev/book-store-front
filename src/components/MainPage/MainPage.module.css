@@ -1,45 +1,9 @@
 .mainPage {
   margin-top: 100px;
-  height: 80vh;
+  padding-bottom: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.filter_menu {
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
-  background-color: rgb(245, 244, 244);
-  border: 1px solid rgba(128, 128, 128, 0.158);
-  height: 40px;
-  width: 100%;
-  position: absolute;
-  top: 60px;
-  z-index: 5;
-}
-
-.filters_list {
-  display: flex;
-  margin-left: 5vw;
-}
-
-.filter_item {
-  margin-left: 20px;
-  cursor: pointer;
-}
-
-.genre {
-  cursor: pointer;
-}
-
-.genre_list {
-  position: absolute;
-  top: 40px;
-  width: 100%;
-  background-color: white;
-  border: 1px rgba(128, 128, 128, 0.219) solid;
-  border-radius: 0 0 10px 10px;
 }
 
 .book_list {
@@ -75,6 +39,15 @@
 
 .pagination_and_button {
   margin: 0 auto;
+}
+
+.count_books_for_page {
+  width: 40px;
+}
+
+.button_count_books {
+  background-color: blue;
+  color: white;
 }
 
 .customLink {
