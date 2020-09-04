@@ -142,56 +142,48 @@ function Profile(props) {
       {user.orders.length ? (
         <div>
           <h3>История заказов</h3>
-          {user.orders.map((order, index) => {
-            return (
-              <Card key={index} className={classes.card_order}>
-                <CardContent>
-                  <Typography color="textSecondary" gutterBottom>
-                    Заказ № {order.id}
-                  </Typography>
-                  <Typography
-                    className={classes.text_left}
-                    variant="h5"
-                    component="h2"
-                  >
-                    Товары:
-                  </Typography>
-                  {order.books.map((book, index) => {
-                    return (
-                      <div className={classes.card_content} key={index}>
-                        <Typography
-                          className={classes.text_left}
-                          color="textSecondary"
-                        >
-                          <Link
-                            className={classes.link}
-                            to={`/book_${book.id}`}
-                          >
-                            {book.title}
-                          </Link>
-                        </Typography>
-                        <Typography
-                          className={classes.text_right}
-                          color="textSecondary"
-                        >
-                          {book.price} руб.
-                        </Typography>
-                      </div>
-                    );
-                  })}
-                  <Typography
-                    className={classes.text_left}
-                    variant="h5"
-                    component="h2"
-                  >
-                    Сумма заказа{" "}
-                    {order.books.reduce((sum, book) => sum + book.price, 0)}{" "}
-                    руб.
-                  </Typography>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {user.orders.map((order, index) => (
+            <Card key={index} className={classes.card_order}>
+              <CardContent>
+                <Typography color="textSecondary" gutterBottom>
+                  Заказ № {order.id}
+                </Typography>
+                <Typography
+                  className={classes.text_left}
+                  variant="h5"
+                  component="h2"
+                >
+                  Товары:
+                </Typography>
+                {order.books.map((book, index) => (
+                  <div className={classes.card_content} key={index}>
+                    <Typography
+                      className={classes.text_left}
+                      color="textSecondary"
+                    >
+                      <Link className={classes.link} to={`/book_${book.id}`}>
+                        {book.title}
+                      </Link>
+                    </Typography>
+                    <Typography
+                      className={classes.text_right}
+                      color="textSecondary"
+                    >
+                      {book.price} руб.
+                    </Typography>
+                  </div>
+                ))}
+                <Typography
+                  className={classes.text_left}
+                  variant="h5"
+                  component="h2"
+                >
+                  Сумма заказа{" "}
+                  {order.books.reduce((sum, book) => sum + book.price, 0)} руб.
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       ) : (
         <div>Нет совершенных покупок</div>

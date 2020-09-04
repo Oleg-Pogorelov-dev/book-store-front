@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
@@ -19,6 +19,7 @@ function Search(props) {
   const [searchText, setSearchText] = useState("");
   const [searchValue, setSearchValue] = useState(null);
 
+  const history = useHistory();
   const debouncedSearchTerm = useDebounce(searchText, 1000);
   const filter = createFilterOptions();
 
@@ -68,7 +69,7 @@ function Search(props) {
 
   return (
     <FormControl>
-      {searchValue ? <Redirect to="/" /> : null}
+      {searchValue ? history.push("/") : null}
       <Autocomplete
         className={classes.search}
         size="small"

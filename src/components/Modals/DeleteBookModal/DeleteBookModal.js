@@ -1,16 +1,19 @@
 import React from "react";
 import { Button } from "@material-ui/core";
 import { connect } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import classes from "./DeleteBookModal.module.css";
 import { deleteBook } from "../../../store/actions/actionCreators";
 
 function DeleteBookModal(props) {
-  const { bookId, setConfirmModal, setRedirect, deleteBook } = props;
+  const { bookId, setConfirmModal, deleteBook } = props;
+
+  const history = useHistory();
 
   const onBtnClick = (e) => {
     deleteBook(bookId);
-    setRedirect(true);
+    history.push("/");
   };
 
   const onBtnCancel = (e) => {

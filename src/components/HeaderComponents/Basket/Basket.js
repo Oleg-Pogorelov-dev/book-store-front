@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Button, Card, CardContent, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import classes from "./Basket.module.css";
@@ -12,13 +11,7 @@ import {
 } from "../../../store/actions/actionCreators";
 
 function Basket(props) {
-  const {
-    setNotificationFalse,
-    user,
-    createOrder,
-    message,
-    setMessage,
-  } = props;
+  const { setNotificationFalse, user, createOrder } = props;
 
   const [books, setBooks] = useState(
     JSON.parse(localStorage.getItem("basket")) || []
@@ -47,37 +40,8 @@ function Basket(props) {
     setNotificationFalse();
   };
 
-  const notify = () => {
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-    setMessage("");
-  };
-
   if (!books.length) {
-    return (
-      <div className={classes.main}>
-        {message ? notify() : ""}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-        Корзина пуста :(
-      </div>
-    );
+    return <div className={classes.main}>Корзина пуста :(</div>;
   }
 
   return (
@@ -93,14 +57,12 @@ function Basket(props) {
           <Typography className={classes.text_left} variant="h5" component="h2">
             Товары:
           </Typography>
-          {books.map((book, index) => {
-            return (
-              <div className={classes.book} key={index}>
-                <div>{book.title}</div>
-                <div>Цена {book.price} руб.</div>
-              </div>
-            );
-          })}
+          {books.map((book, index) => (
+            <div className={classes.book} key={index}>
+              <div>{book.title}</div>
+              <div>Цена {book.price} руб.</div>
+            </div>
+          ))}
           <Typography className={classes.text_left} variant="h5" component="h2">
             Сумма заказа: {sumOrder} руб.
           </Typography>

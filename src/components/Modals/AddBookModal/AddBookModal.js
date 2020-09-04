@@ -123,13 +123,11 @@ function AddBook(props) {
             onChange={onSelectChange}
             error={!!error && !genre}
           >
-            {genres.map((oneGenre, index) => {
-              return (
-                <MenuItem key={index} value={oneGenre}>
-                  {oneGenre}
-                </MenuItem>
-              );
-            })}
+            {genres.map((oneGenre, index) => (
+              <MenuItem key={index} value={oneGenre}>
+                {oneGenre}
+              </MenuItem>
+            ))}
           </Select>
           <FormHelperText className={classesMUI.error_for_genres}>
             {!genre ? error : ""}

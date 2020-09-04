@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { withRouter, Link, Redirect } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import {
   Button,
   Modal,
@@ -18,7 +18,6 @@ import {
 import classes from "./Book.module.css";
 import UpdateBookModal from "../Modals/UpdateBookModal/UpdateBookModal";
 import DeleteBookModal from "../Modals/DeleteBookModal/DeleteBookModal";
-import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {
@@ -28,21 +27,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Book(props) {
-  const {
-    book,
-    setNotificationTrue,
-    getBook,
-    user,
-    message,
-    setMessage,
-  } = props;
+  const { book, setNotificationTrue, getBook, user, setMessage } = props;
 
   const idBook = +props.match.params.book.split("_")[1];
   const [error, setError] = useState("");
   const [num_img, setNumImg] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
-  const [redirect, setRedirect] = useState(false);
 
   const onBtnClick = () => {
     let order = [];
@@ -86,22 +77,6 @@ function Book(props) {
 
   const classesMUI = useStyles();
 
-  const notify = () => {
-    toast.success(message, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
-    setMessage("");
-  };
-
-  if (redirect) {
-    return <Redirect to="/" />;
-  }
   if (!book.title) {
     return (
       <Backdrop className={classesMUI.backdrop} open={book.loading}>
@@ -109,37 +84,24 @@ function Book(props) {
       </Backdrop>
     );
   }
+
   return (
     <div className={classes.main}>
-      {message ? notify() : ""}
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       <h1>{book.title}</h1>
       <div className={classes.book_info}>
         <div className={classes.images}>
           <div className={classes.all_images_book}>
             {book.img.length
-              ? book.img.map((img, index) => {
-                  return (
-                    <div key={index} className={classes.img_wrapper}>
-                      <img
-                        className={classes.book_img}
-                        onMouseMove={() => onMoveImg(index)}
-                        src={`${process.env.REACT_APP_BASE_URL}${img}`}
-                        alt="Oops!"
-                      />
-                    </div>
-                  );
-                })
+              ? book.img.map((img, index) => (
+                  <div key={index} className={classes.img_wrapper}>
+                    <img
+                      className={classes.book_img}
+                      onMouseMove={() => onMoveImg(index)}
+                      src={`${process.env.REACT_APP_BASE_URL}${img}`}
+                      alt="Oops!"
+                    />
+                  </div>
+                ))
               : ""}
           </div>
           <div className={classes.cover_wrapper}>
@@ -222,11 +184,7 @@ function Book(props) {
         aria-describedby="simple-modal-description"
       >
         <div className={classes.paper}>
-          <DeleteBookModal
-            bookId={book.id}
-            setRedirect={setRedirect}
-            setConfirmModal={setConfirmModal}
-          />
+          <DeleteBookModal bookId={book.id} setConfirmModal={setConfirmModal} />
         </div>
       </Modal>
     </div>
@@ -235,7 +193,6 @@ function Book(props) {
 
 const mapStateToProps = (store) => ({
   book: store.book,
-  message: store.message,
 });
 
 const mapDispatchToProps = {

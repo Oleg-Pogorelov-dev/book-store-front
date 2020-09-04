@@ -12,7 +12,7 @@ export function reducerMyProfile(
     last_name: "",
     phone: null,
     avatar: "",
-    loading: false,
+    loading: true,
     orders: [],
     error: "",
   },
